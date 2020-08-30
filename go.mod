@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	get.porter.sh/porter v0.22.1-beta.1
-	github.com/cnabio/cnab-go v0.8.2-beta1
+	github.com/Masterminds/semver v1.5.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/gobuffalo/packr/v2 v2.8.0
 	github.com/karrick/godirwalk v1.16.1 // indirect

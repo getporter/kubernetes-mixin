@@ -1,125 +1,93 @@
-package porter
+package kubernetes
 
 import (
+	"bytes"
 	"fmt"
-	"os"
+	"text/template"
 
-	"get.porter.sh/porter/pkg/build"
-	configadapter "get.porter.sh/porter/pkg/cnab/config-adapter"
-	"get.porter.sh/porter/pkg/manifest"
-	"get.porter.sh/porter/pkg/mixin"
-	"get.porter.sh/porter/pkg/printer"
-	"github.com/cnabio/cnab-go/bundle"
+	"get.porter.sh/porter/pkg/exec/builder"
+	"github.com/Masterminds/semver"
+	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 )
 
-type BuildProvider interface {
-	// BuildInvocationImage using the bundle in the current directory
-	BuildInvocationImage(manifest *manifest.Manifest) error
+const (
+	dockerFileContents = `RUN apt-get update && \
+apt-get install -y apt-transport-https curl && \
+curl -o kubectl https://storage.googleapis.com/kubernetes-release/release/{{ .KubernetesClientVersion }}/bin/linux/amd64/kubectl && \
+mv kubectl /usr/local/bin && \
+chmod a+x /usr/local/bin/kubectl
+`
+	// clientVersionConstraint represents the semver constraint for the kubectl client version
+	// Currently, this mixin only supports kubectl clients versioned v1.x.x
+	clientVersionConstraint string = "^v1.x"
+)
+
+type MixinConfig struct {
+	ClientVersion string `yaml:"clientVersion,omitempty"`
 }
 
-type BuildOptions struct {
-	contextOptions
-	NoLint bool
+// BuildInput represents stdin passed to the mixin for the build command.
+type BuildInput struct {
+	Config MixinConfig
 }
 
-func (p *Porter) Build(opts BuildOptions) error {
-	opts.Apply(p.Context)
-
-	err := p.LoadManifest()
+// Build generates the relevant Dockerfile output for this mixin
+func (m *Mixin) Build() error {
+	// Create new Builder.
+	var input BuildInput
+	err := builder.LoadAction(m.Context, "", func(contents []byte) (interface{}, error) {
+		err := yaml.Unmarshal(contents, &input)
+		return &input, err
+	})
 	if err != nil {
 		return err
 	}
 
-	if !opts.NoLint {
-		err = p.preLint()
+	suppliedClientVersion := input.Config.ClientVersion
+
+	if suppliedClientVersion != "" {
+		ok, err := validate(suppliedClientVersion, clientVersionConstraint)
 		if err != nil {
 			return err
 		}
+		if !ok {
+			return errors.Errorf("supplied clientVersion %q does not meet semver constraint %q",
+				suppliedClientVersion, clientVersionConstraint)
+		}
+		m.KubernetesClientVersion = suppliedClientVersion
 	}
 
-	generator := build.NewDockerfileGenerator(p.Config, p.Manifest, p.Templates, p.Mixins)
-
-	if err := generator.PrepareFilesystem(); err != nil {
-		return fmt.Errorf("unable to copy mixins: %s", err)
-	}
-	if err := generator.GenerateDockerFile(); err != nil {
-		return fmt.Errorf("unable to generate Dockerfile: %s", err)
-	}
-	if err := p.Builder.BuildInvocationImage(p.Manifest); err != nil {
-		return errors.Wrap(err, "unable to build CNAB invocation image")
-	}
-
-	return p.buildBundle(p.Manifest.Image, "")
-}
-
-func (p *Porter) preLint() error {
-	lintOpts := LintOptions{}
-	lintOpts.RawFormat = string(printer.FormatPlaintext)
-	err := lintOpts.Validate(p.Context)
+	t, err := template.New("cmd").Parse(dockerFileContents)
 	if err != nil {
 		return err
 	}
 
-	results, err := p.Lint(lintOpts)
+	var cmd bytes.Buffer
+	err = t.Execute(&cmd, m)
 	if err != nil {
 		return err
 	}
 
-	if len(results) > 0 {
-		fmt.Fprintln(p.Out, results.String())
-	}
-
-	if results.HasError() {
-		// An error was found during linting, stop and let the user correct it
-		return errors.New("Lint errors were detected. Rerun with --no-lint ignore the errors.")
+	_, err = fmt.Fprint(m.Out, cmd.String())
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func (p *Porter) getUsedMixins() ([]mixin.Metadata, error) {
-	installedMixins, err := p.ListMixins()
-
+// validate validates that the supplied clientVersion meets the supplied semver constraint
+func validate(clientVersion, constraint string) (bool, error) {
+	c, err := semver.NewConstraint(constraint)
 	if err != nil {
-		return nil, errors.Wrapf(err, "error while listing mixins")
+		return false, errors.Wrapf(err, "unable to parse version constraint %q", constraint)
 	}
 
-	var usedMixins []mixin.Metadata
-	for _, installedMixin := range installedMixins {
-		for _, m := range p.Manifest.Mixins {
-			if installedMixin.Name == m.Name {
-				usedMixins = append(usedMixins, installedMixin)
-			}
-		}
-	}
-
-	return usedMixins, nil
-}
-
-func (p *Porter) buildBundle(invocationImage string, digest string) error {
-	imageDigests := map[string]string{invocationImage: digest}
-
-	mixins, err := p.getUsedMixins()
-
+	v, err := semver.NewVersion(clientVersion)
 	if err != nil {
-		return err
+		return false, errors.Wrapf(err, "supplied client version %q cannot be parsed as semver", clientVersion)
 	}
 
-	converter := configadapter.NewManifestConverter(p.Context, p.Manifest, imageDigests, mixins)
-	bun, err := converter.ToBundle()
-	if err != nil {
-		return err
-	}
-	return p.writeBundle(bun)
-}
-
-func (p Porter) writeBundle(b bundle.Bundle) error {
-	f, err := p.Config.FileSystem.OpenFile(build.LOCAL_BUNDLE, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-	defer f.Close()
-	if err != nil {
-		return errors.Wrapf(err, "error creating %s", build.LOCAL_BUNDLE)
-	}
-	_, err = b.WriteTo(f)
-	return errors.Wrapf(err, "error writing to %s", build.LOCAL_BUNDLE)
+	return c.Check(v), nil
 }
