@@ -1,5 +1,0 @@
-install:
-  - kubernetes:
-      description: "Invalid Input Test Case"
-      args:
-      - yarrrr
