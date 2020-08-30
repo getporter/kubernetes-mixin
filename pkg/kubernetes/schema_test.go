@@ -15,7 +15,7 @@ func TestMixin_GetSchema(t *testing.T) {
 	gotSchema, err := m.GetSchema()
 	require.NoError(t, err)
 
-	wantSchema, err := ioutil.ReadFile("schema/schema.json")
+	wantSchema, err := ioutil.ReadFile("./schema/schema.json")
 	require.NoError(t, err)
 
 	assert.Equal(t, string(wantSchema), gotSchema)
@@ -29,7 +29,7 @@ func TestMixin_PrintSchema(t *testing.T) {
 
 	gotSchema := m.TestContext.GetOutput()
 
-	wantSchema, err := ioutil.ReadFile("schema/schema.json")
+	wantSchema, err := ioutil.ReadFile("./schema/schema.json")
 	require.NoError(t, err)
 
 	assert.Equal(t, string(wantSchema), gotSchema)

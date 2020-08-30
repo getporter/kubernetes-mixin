@@ -20,6 +20,7 @@ chmod a+x /usr/local/bin/kubectl
 func TestMixin_Build(t *testing.T) {
 	t.Run("build with the default Kubernetes version", func(t *testing.T) {
 		m := NewTestMixin(t)
+		m.Debug = false
 		err := m.Build()
 		require.NoError(t, err)
 
@@ -34,6 +35,7 @@ func TestMixin_Build(t *testing.T) {
 		require.NoError(t, err)
 
 		m := NewTestMixin(t)
+		m.Debug = false
 		m.In = bytes.NewReader(b)
 		err = m.Build()
 		require.NoError(t, err)
