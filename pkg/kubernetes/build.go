@@ -1,61 +1,125 @@
-package kubernetes
+package porter
 
 import (
-	"get.porter.sh/porter/pkg/exec/builder"
-	yaml "gopkg.in/yaml.v2"
+	"fmt"
+	"os"
+
+	"get.porter.sh/porter/pkg/build"
+	configadapter "get.porter.sh/porter/pkg/cnab/config-adapter"
+	"get.porter.sh/porter/pkg/manifest"
+	"get.porter.sh/porter/pkg/mixin"
+	"get.porter.sh/porter/pkg/printer"
+	"github.com/cnabio/cnab-go/bundle"
+	"github.com/pkg/errors"
 )
 
-// BuildInput represents stdin passed to the mixin for the build command.
-type BuildInput struct {
-	Config MixinConfig
+type BuildProvider interface {
+	// BuildInvocationImage using the bundle in the current directory
+	BuildInvocationImage(manifest *manifest.Manifest) error
 }
 
-// MixinConfig represents configuration that can be set on the kubernetes mixin in porter.yaml
-// mixins:
-// - kubernetes:
-//	  clientVersion: "v0.0.0"
-
-type MixinConfig struct {
-	ClientVersion string `yaml:"clientVersion,omitempty"`
+type BuildOptions struct {
+	contextOptions
+	NoLint bool
 }
 
-// This is an example. Replace the following with whatever steps are needed to
-// install required components into
-// const dockerfileLines = `RUN apt-get update && \
-// apt-get install gnupg apt-transport-https lsb-release software-properties-common -y && \
-// echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ stretch main" | \
-//    tee /etc/apt/sources.list.d/azure-cli.list && \
-// apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv \
-// 	--keyserver packages.microsoft.com \
-// 	--recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF && \
-// apt-get update && apt-get install azure-cli
-// `
+func (p *Porter) Build(opts BuildOptions) error {
+	opts.Apply(p.Context)
 
-// Build will generate the necessary Dockerfile lines
-// for an invocation image using this mixin
-func (m *Mixin) Build() error {
-
-	// Create new Builder.
-	var input BuildInput
-
-	err := builder.LoadAction(m.Context, "", func(contents []byte) (interface{}, error) {
-		err := yaml.Unmarshal(contents, &input)
-		return &input, err
-	})
+	err := p.LoadManifest()
 	if err != nil {
 		return err
 	}
 
-	suppliedClientVersion := input.Config.ClientVersion
-
-	if suppliedClientVersion != "" {
-		m.ClientVersion = suppliedClientVersion
+	if !opts.NoLint {
+		err = p.preLint()
+		if err != nil {
+			return err
+		}
 	}
 
-	//fmt.Fprintf(m.Out, dockerfileLines)
+	generator := build.NewDockerfileGenerator(p.Config, p.Manifest, p.Templates, p.Mixins)
 
-	// Example of pulling and defining a client version for your mixin
-	// fmt.Fprintf(m.Out, "\nRUN curl https://get.helm.sh/helm-%s-linux-amd64.tar.gz --output helm3.tar.gz", m.ClientVersion)
+	if err := generator.PrepareFilesystem(); err != nil {
+		return fmt.Errorf("unable to copy mixins: %s", err)
+	}
+	if err := generator.GenerateDockerFile(); err != nil {
+		return fmt.Errorf("unable to generate Dockerfile: %s", err)
+	}
+	if err := p.Builder.BuildInvocationImage(p.Manifest); err != nil {
+		return errors.Wrap(err, "unable to build CNAB invocation image")
+	}
+
+	return p.buildBundle(p.Manifest.Image, "")
+}
+
+func (p *Porter) preLint() error {
+	lintOpts := LintOptions{}
+	lintOpts.RawFormat = string(printer.FormatPlaintext)
+	err := lintOpts.Validate(p.Context)
+	if err != nil {
+		return err
+	}
+
+	results, err := p.Lint(lintOpts)
+	if err != nil {
+		return err
+	}
+
+	if len(results) > 0 {
+		fmt.Fprintln(p.Out, results.String())
+	}
+
+	if results.HasError() {
+		// An error was found during linting, stop and let the user correct it
+		return errors.New("Lint errors were detected. Rerun with --no-lint ignore the errors.")
+	}
 
 	return nil
+}
+
+func (p *Porter) getUsedMixins() ([]mixin.Metadata, error) {
+	installedMixins, err := p.ListMixins()
+
+	if err != nil {
+		return nil, errors.Wrapf(err, "error while listing mixins")
+	}
+
+	var usedMixins []mixin.Metadata
+	for _, installedMixin := range installedMixins {
+		for _, m := range p.Manifest.Mixins {
+			if installedMixin.Name == m.Name {
+				usedMixins = append(usedMixins, installedMixin)
+			}
+		}
+	}
+
+	return usedMixins, nil
+}
+
+func (p *Porter) buildBundle(invocationImage string, digest string) error {
+	imageDigests := map[string]string{invocationImage: digest}
+
+	mixins, err := p.getUsedMixins()
+
+	if err != nil {
+		return err
+	}
+
+	converter := configadapter.NewManifestConverter(p.Context, p.Manifest, imageDigests, mixins)
+	bun, err := converter.ToBundle()
+	if err != nil {
+		return err
+	}
+	return p.writeBundle(bun)
+}
+
+func (p Porter) writeBundle(b bundle.Bundle) error {
+	f, err := p.Config.FileSystem.OpenFile(build.LOCAL_BUNDLE, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	defer f.Close()
+	if err != nil {
+		return errors.Wrapf(err, "error creating %s", build.LOCAL_BUNDLE)
+	}
+	_, err = b.WriteTo(f)
+	return errors.Wrapf(err, "error writing to %s", build.LOCAL_BUNDLE)
 }

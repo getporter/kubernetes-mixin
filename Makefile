@@ -1,5 +1,5 @@
 MIXIN = kubernetes
-PKG = get.porter.sh/mixin/$(MIXIN)
+PKG = github.com/deislabs/porter-$(MIXIN)
 SHELL = bash
 
 GO = GO111MODULE=on go

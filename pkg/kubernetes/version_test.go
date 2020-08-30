@@ -22,7 +22,7 @@ func TestPrintVersion(t *testing.T) {
 	m.PrintVersion(opts)
 
 	gotOutput := m.TestContext.GetOutput()
-	wantOutput := "kubernetes v1.2.3 (abc123) by deislabs"
+	wantOutput := "kubernetes v1.2.3 (abc123) by Porter Authors"
 	if !strings.Contains(gotOutput, wantOutput) {
 		t.Fatalf("invalid output:\nWANT:\t%q\nGOT:\t%q\n", wantOutput, gotOutput)
 	}
@@ -45,7 +45,7 @@ func TestPrintJsonVersion(t *testing.T) {
   "name": "kubernetes",
   "version": "v1.2.3",
   "commit": "abc123",
-  "author": "deislabs"
+  "author": "Porter Authors"
 }
 `
 	if !strings.Contains(gotOutput, wantOutput) {

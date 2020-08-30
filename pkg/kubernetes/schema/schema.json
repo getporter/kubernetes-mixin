@@ -4,46 +4,243 @@
     "installStep": {
       "type": "object",
       "properties": {
-        "kubernetes": {"$ref": "#/definitions/kubernetes"}
+        "kubernetes": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 1
+            },
+            "namespace": {
+              "type": "string"
+            },
+            "manifests": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minItems": 1
+              }
+            },
+            "record": {
+              "type": "boolean"
+            },
+            "selector": {
+              "type": "string"
+            },
+            "context": {
+              "type": "string"
+            },
+            "validate": {
+              "type": "boolean",
+              "default":"true"
+            },
+            "wait": {
+              "type": "boolean",
+              "default":"true"
+            },
+            "outputs": {
+              "$ref": "#/definitions/outputs"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "description", "manifests"
+          ]
+        }
       },
+      "additionalProperties": false,
       "required": [
         "kubernetes"
-      ],
-      "additionalProperties": false
+      ]
     },
     "upgradeStep": {
       "type": "object",
       "properties": {
-        "kubernetes": {"$ref": "#/definitions/kubernetes"}
+        "kubernetes": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 1
+            },
+            "namespace": {
+              "type": "string"
+            },
+            "manifests": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minItems": 1
+              }
+            },
+            "force": {
+              "type": ["boolean","null"]
+            },
+            "gracePeriod" : {
+              "type": "integer"
+            },
+            "overwrite": {
+              "type": ["boolean","null"],
+              "default":"true"
+            },
+            "prune": {
+              "type": ["boolean","null"],
+              "default":"true"
+            },
+            "record": {
+              "type": ["boolean","null"]
+            },
+            "selector": {
+              "type": "string"
+            },
+            "context": {
+              "type": "string"
+            },
+            "timeout" : {
+              "type": "integer"
+            },
+            "validate": {
+              "type": ["boolean","null"],
+              "default":"true"
+            },
+            "wait": {
+              "type": ["boolean","null"],
+              "default":"true"
+            },
+            "outputs": {
+              "$ref": "#/definitions/outputs"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "description", "manifests"
+          ]
+        }
       },
+      "additionalProperties": false,
       "required": [
         "kubernetes"
-      ],
-      "additionalProperties": false
+      ]
     },
     "invokeStep": {
       "type": "object",
       "properties": {
-        "kubernetes": {"$ref": "#/definitions/kubernetes"}
+        "kubernetes": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 1
+            },
+            "namespace": {
+              "type": "string"
+            },
+            "manifests": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minItems": 1
+              }
+            },
+            "force": {
+              "type": ["boolean","null"]
+            },
+            "gracePeriod" : {
+              "type": "integer"
+            },
+            "overwrite": {
+              "type": ["boolean","null"],
+              "default":"true"
+            },
+            "prune": {
+              "type": ["boolean","null"],
+              "default":"true"
+            },
+            "record": {
+              "type": ["boolean","null"]
+            },
+            "selector": {
+              "type": "string"
+            },
+            "context": {
+              "type": "string"
+            },
+            "timeout" : {
+              "type": "integer"
+            },
+            "validate": {
+              "type": ["boolean","null"],
+              "default":"true"
+            },
+            "wait": {
+              "type": ["boolean","null"],
+              "default":"true"
+            },
+            "outputs": {
+              "$ref": "#/definitions/outputs"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "description", "manifests"
+          ]
+        }
       },
+      "additionalProperties": false,
       "required": [
         "kubernetes"
-      ],
-      "additionalProperties": false
+      ]
     },
     "uninstallStep": {
       "type": "object",
       "properties": {
-        "kubernetes": {"$ref": "#/definitions/kubernetes"}
+        "kubernetes": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 1
+            },
+            "namespace": {
+              "type": "string"
+            },
+            "manifests": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minItems": 1
+              }
+            },
+            "force": {
+              "type": ["boolean","null"]
+            },
+            "gracePeriod" : {
+              "type": "integer"
+            },
+            "selector": {
+              "type": "string"
+            },
+            "context": {
+              "type": "string"
+            },
+            "timeout" : {
+              "type": "integer"
+            },
+            "wait": {
+              "type": "boolean",
+              "default":"true"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "description", "manifests"
+          ]
+        }
       },
+      "additionalProperties": false,
       "required": [
         "kubernetes"
-      ],
-      "additionalProperties": false
-    },
-    "stepDescription": {
-      "type": "string",
-      "minLength": 1
+      ]
     },
     "outputs": {
       "type": "array",
@@ -53,53 +250,22 @@
           "name": {
             "type": "string"
           },
+          "namespace": {
+            "type": "string"
+          },
+          "resourceType": {
+            "type": "string"
+          },
+          "resourceName": {
+            "type": "string"
+          },
           "jsonPath": {
-            "type": "string"
-          },
-          "regex": {
-            "type": "string"
-          },
-          "path": {
             "type": "string"
           }
         },
         "additionalProperties": false,
-        "required": [
-          "name"
-        ],
-        "oneOf": [
-          { "required": [ "jsonPath" ] },
-          { "required": [ "regex" ] },
-          { "required": [ "path" ] }
-        ]
+        "required": ["name", "resourceType", "resourceName", "jsonPath"]
       }
-    },
-    "kubernetes": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "$ref": "#/definitions/stepDescription"
-        },
-        "arguments": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "flags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": ["null","boolean","number","string"]
-          }
-        },
-        "outputs": {
-          "$ref": "#/definitions/outputs"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "description"
-      ]
     }
   },
   "type": "object",
@@ -123,13 +289,10 @@
       }
     }
   },
-  "patternProperties": {
-    ".*": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/invokeStep"
-      }
+  "additionalProperties": {
+    "type": "array",
+    "items": {
+      "$ref": "#/definitions/invokeStep"
     }
-  },
-  "additionalProperties": false
+  }
 }
