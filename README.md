@@ -1,6 +1,6 @@
 # kubernetes Mixin for Porter
 
-<img src="https://porter.sh/images/mixins/helm.svg" align="right" width="150px"/>
+<img src="https://porter.sh/images/mixins/kubernetes.svg" align="right" width="150px"/>
 
 This is a kubernetes mixin for [Porter](https://github.com/deislabs/porter). It executes the
 appropriate helm command based on which action it is included within: `install`,
