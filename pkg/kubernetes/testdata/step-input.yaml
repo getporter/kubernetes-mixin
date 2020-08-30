@@ -1,7 +1,5 @@
-config:
-  clientVersion: v0.0.0
 install:
-  - skeletor:
+  - kubernetes:
       description: "Summon Minion"
       arguments:
       - "man-e-faces"

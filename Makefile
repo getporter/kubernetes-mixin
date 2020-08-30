@@ -1,4 +1,4 @@
-MIXIN = skeletor
+MIXIN = kubernetes
 PKG = get.porter.sh/mixin/$(MIXIN)
 SHELL = bash
 
@@ -106,4 +106,4 @@ clean: clean-packr
 	-rm -fr bin/
 
 clean-packr: packr2
-	cd pkg/skeletor && packr2 clean
+	cd pkg/kubernetes && packr2 clean

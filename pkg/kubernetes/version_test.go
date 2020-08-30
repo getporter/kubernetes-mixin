@@ -1,12 +1,12 @@
-package skeletor
+package kubernetes
 
 import (
 	"strings"
 	"testing"
 
-	"get.porter.sh/mixin/skeletor/pkg"
 	"get.porter.sh/porter/pkg/porter/version"
 	"get.porter.sh/porter/pkg/printer"
+	"github.com/deislabs/porter-kubernetes/pkg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,7 +22,7 @@ func TestPrintVersion(t *testing.T) {
 	m.PrintVersion(opts)
 
 	gotOutput := m.TestContext.GetOutput()
-	wantOutput := "skeletor v1.2.3 (abc123) by YOURNAME"
+	wantOutput := "kubernetes v1.2.3 (abc123) by deislabs"
 	if !strings.Contains(gotOutput, wantOutput) {
 		t.Fatalf("invalid output:\nWANT:\t%q\nGOT:\t%q\n", wantOutput, gotOutput)
 	}
@@ -42,10 +42,10 @@ func TestPrintJsonVersion(t *testing.T) {
 
 	gotOutput := m.TestContext.GetOutput()
 	wantOutput := `{
-  "name": "skeletor",
+  "name": "kubernetes",
   "version": "v1.2.3",
   "commit": "abc123",
-  "author": "YOURNAME"
+  "author": "deislabs"
 }
 `
 	if !strings.Contains(gotOutput, wantOutput) {

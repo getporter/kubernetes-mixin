@@ -4,40 +4,40 @@
     "installStep": {
       "type": "object",
       "properties": {
-        "skeletor": {"$ref": "#/definitions/skeletor"}
+        "kubernetes": {"$ref": "#/definitions/kubernetes"}
       },
       "required": [
-        "skeletor"
+        "kubernetes"
       ],
       "additionalProperties": false
     },
     "upgradeStep": {
       "type": "object",
       "properties": {
-        "skeletor": {"$ref": "#/definitions/skeletor"}
+        "kubernetes": {"$ref": "#/definitions/kubernetes"}
       },
       "required": [
-        "skeletor"
+        "kubernetes"
       ],
       "additionalProperties": false
     },
     "invokeStep": {
       "type": "object",
       "properties": {
-        "skeletor": {"$ref": "#/definitions/skeletor"}
+        "kubernetes": {"$ref": "#/definitions/kubernetes"}
       },
       "required": [
-        "skeletor"
+        "kubernetes"
       ],
       "additionalProperties": false
     },
     "uninstallStep": {
       "type": "object",
       "properties": {
-        "skeletor": {"$ref": "#/definitions/skeletor"}
+        "kubernetes": {"$ref": "#/definitions/kubernetes"}
       },
       "required": [
-        "skeletor"
+        "kubernetes"
       ],
       "additionalProperties": false
     },
@@ -74,7 +74,7 @@
         ]
       }
     },
-    "skeletor": {
+    "kubernetes": {
       "type": "object",
       "properties": {
         "description": {

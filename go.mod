@@ -1,4 +1,4 @@
-module get.porter.sh/mixin/skeletor
+module github.com/deislabs/porter-kubernetes
 
 go 1.13
 
