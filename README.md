@@ -53,7 +53,7 @@ install:
 
 ```
 
-#### Install Upgrade Action
+#### Upgrade Action
 
 ```yaml
 upgrade:
