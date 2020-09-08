@@ -9,22 +9,39 @@ appropriate helm command based on which action it is included within: `install`,
 ### Install or Upgrade
 
 ```shell
-porter mixin install kubernetes --feed-url https://github.com/deislabs/porter-kubernetes/atom.xml
+porter mixin install kubernetes
+```
+
+#### Install or Upgrade canary version
+
+```shell
+porter mixin install kubernetes --version canary --url https://cdn.porter.sh/mixins/kubernetes
+```
+
+#### Install or Upgrade from feed-url
+
+```shell
+porter mixin install kubernetes --feed-url https://cdn.porter.sh/mixins/atom.xml
+```
+
+#### Manually Install or Upgrade with a specific version from github
+
+```shell
+porter mixin install kubernetes --version $VERSION --url https://github.com/deislabs/porter-kubernetes/releases/download
 ```
 
 ### Mixin Configuration
 
-Helm client
+#### Kubernetes client version
 
 ```yaml
 - kubernetes:
     clientVersion: v1.15.5
 ```
 
+### Mixin Actions Syntax
 
-### Mixin Syntax
-
-Install
+#### Install Action
 
 ```yaml
 install:
@@ -36,7 +53,7 @@ install:
 
 ```
 
-Upgrade
+#### Upgrade Action
 
 ```yaml
 upgrade:
@@ -48,7 +65,7 @@ upgrade:
 
 ```
 
-Uninstall
+#### Uninstall Action
 
 ```yaml
 uninstall:
