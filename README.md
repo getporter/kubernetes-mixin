@@ -2,7 +2,7 @@
 
 <img src="https://porter.sh/images/mixins/kubernetes.svg" align="right" width="150px"/>
 
-This is a kubernetes mixin for [Porter](https://github.com/deislabs/porter). It executes the
+This is a kubernetes mixin for [Porter](https://github.com/getporter/porter). It executes the
 appropriate helm command based on which action it is included within: `install`,
 `upgrade`, or `delete`.
 
@@ -27,7 +27,7 @@ porter mixin install kubernetes --feed-url https://cdn.porter.sh/mixins/atom.xml
 #### Manually Install or Upgrade with a specific version from github
 
 ```shell
-porter mixin install kubernetes --version $VERSION --url https://github.com/deislabs/porter-kubernetes/releases/download
+porter mixin install kubernetes --version $VERSION --url https://github.com/getporter/kubernetes-mixin/releases/download
 ```
 
 ### Mixin Configuration

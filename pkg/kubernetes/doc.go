@@ -1,1 +1,1 @@
-package kubernetes // import "github.com/deislabs/porter-kubernetes/pkg/kubernetes"
+package kubernetes // import "get.porter.sh/mixin/kubernetes/pkg/kubernetes"
