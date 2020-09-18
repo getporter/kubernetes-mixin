@@ -1,9 +1,9 @@
 package kubernetes
 
 import (
+	"get.porter.sh/mixin/kubernetes/pkg"
 	"get.porter.sh/porter/pkg/mixin"
 	"get.porter.sh/porter/pkg/porter/version"
-	"github.com/deislabs/porter-kubernetes/pkg"
 )
 
 func (m *Mixin) PrintVersion(opts version.Options) error {
