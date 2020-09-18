@@ -1,8 +1,8 @@
 package main
 
 import (
+	"get.porter.sh/mixin/kubernetes/pkg/kubernetes"
 	"get.porter.sh/porter/pkg/porter/version"
-	"github.com/deislabs/porter-kubernetes/pkg/kubernetes"
 	"github.com/spf13/cobra"
 )
 
