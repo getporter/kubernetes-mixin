@@ -1,5 +1,7 @@
 # kubernetes Mixin for Porter
 
+[![Build Status](https://dev.azure.com/getporter/porter/_apis/build/status/kubernetes-mixin?branchName=main)](https://dev.azure.com/getporter/porter/_build/latest?definitionId=9&branchName=main)
+
 <img src="https://porter.sh/images/mixins/kubernetes.svg" align="right" width="150px"/>
 
 This is a kubernetes mixin for [Porter](https://github.com/getporter/porter). It executes the
