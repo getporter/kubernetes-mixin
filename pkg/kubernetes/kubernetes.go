@@ -18,6 +18,7 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/gobuffalo/packr/v2"
 	"github.com/pkg/errors"
+	"github.com/rogpeppe/go-internal/semver"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -76,7 +77,7 @@ func (m *Mixin) reconcileKubectlVersion() error {
 		return err
 	}
 
-	if m.KubernetesClientVersion != serverVersion {
+	if m.KubernetesClientVersion == "" || semver.Compare(m.KubernetesClientVersion, serverVersion) == -1 {
 		fmt.Fprintf(m.Out, "Kubectl server version (%s) does not match client version (%s); downloading a compatible client.\n",
 			serverVersion, m.KubernetesClientVersion)
 
