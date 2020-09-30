@@ -192,7 +192,6 @@ func installKubectlClient(m *Mixin, version string) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to construct GET request for fetching kubectl client binary")
 	}
-
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return errors.Wrapf(err, "failed to download kubectl client binary via url: %s", url)
