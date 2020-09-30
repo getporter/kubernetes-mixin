@@ -243,6 +243,5 @@ func getKubectlServerVersion(m *Mixin) (string, error) {
 	json.Unmarshal(outputBytes, &currentKubectl)
 
 	version := currentKubectl.ServerVersion.GitVersion
-
 	return version, nil
 }
