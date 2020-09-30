@@ -1,23 +1,24 @@
 //go:generate packr2
-
 package kubernetes
 
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
+	"time"
 
 	"get.porter.sh/porter/pkg/context"
 	"github.com/ghodss/yaml"
 	"github.com/gobuffalo/packr/v2"
 	"github.com/pkg/errors"
+	"github.com/rogpeppe/go-internal/semver"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -29,6 +30,31 @@ type Mixin struct {
 	*context.Context
 	schemas                 *packr.Box
 	KubernetesClientVersion string
+}
+
+type KubectlVersion struct {
+	ClientVersion struct {
+		Major        string    `json:"major"`
+		Minor        string    `json:"minor"`
+		GitVersion   string    `json:"gitVersion"`
+		GitCommit    string    `json:"gitCommit"`
+		GitTreeState string    `json:"gitTreeState"`
+		BuildDate    time.Time `json:"buildDate"`
+		GoVersion    string    `json:"goVersion"`
+		Compiler     string    `json:"compiler"`
+		Platform     string    `json:"platform"`
+	} `json:"clientVersion"`
+	ServerVersion struct {
+		Major        string    `json:"major"`
+		Minor        string    `json:"minor"`
+		GitVersion   string    `json:"gitVersion"`
+		GitCommit    string    `json:"gitCommit"`
+		GitTreeState string    `json:"gitTreeState"`
+		BuildDate    time.Time `json:"buildDate"`
+		GoVersion    string    `json:"goVersion"`
+		Compiler     string    `json:"compiler"`
+		Platform     string    `json:"platform"`
+	} `json:"serverVersion"`
 }
 
 func New() *Mixin {
@@ -43,18 +69,19 @@ func NewSchemaBox() *packr.Box {
 	return packr.New("get.porter.sh/porter/pkg/kubernetes/schema", "./schema")
 }
 
-func (m *Mixin) Init() error {
-	apiServerVersion, err := getKubectlApiServerVersion(m)
+func (m *Mixin) reconcileKubectlVersion() error {
+
+	serverVersion, err := getKubectlServerVersion(m)
 
 	if err != nil {
 		return err
 	}
+	// install a new client if the current clientversion is null or older then the server version
+	if m.KubernetesClientVersion == "" || semver.Compare(m.KubernetesClientVersion, serverVersion) == -1 {
+		fmt.Fprintf(m.Out, "Kubectl server version (%s) does not match client version (%s); downloading a compatible client.\n",
+			serverVersion, m.KubernetesClientVersion)
 
-	if m.KubernetesClientVersion != apiServerVersion {
-		fmt.Fprintf(m.Out, "Kubectl api server version (%s) does not match client version (%s); downloading a compatible client.\n",
-			apiServerVersion, m.KubernetesClientVersion)
-
-		err := installKubectlClient(m, apiServerVersion)
+		err := installKubectlClient(m, serverVersion)
 		if err != nil {
 			return errors.Wrap(err, "unable to install a compatible kubectl client")
 		}
@@ -179,13 +206,13 @@ func installKubectlClient(m *Mixin, version string) error {
 	}
 	defer os.RemoveAll(tmpDir)
 
-	// Create the local archive
-	kubectlBinPath, err := m.FileSystem.Create(filepath.Join(tmpDir, "kubectl"))
+	// Create the local binary
+	kubectlBinPath, err := m.FileSystem.Create(filepath.Join(tmpDir, "kubectlBin"))
 	if err != nil {
 		return errors.Wrap(err, "unable to create a local file for the kubectl client binary")
 	}
 
-	// Copy response body to local archive
+	// Copy response body to local binary
 	_, err = io.Copy(kubectlBinPath, res.Body)
 	if err != nil {
 		return errors.Wrap(err, "unable to copy the kubectl client binary to the local archive file")
@@ -193,25 +220,29 @@ func installKubectlClient(m *Mixin, version string) error {
 
 	// Move the kubectl binary into the appropriate location
 	binPath := "/usr/local/bin/kubectl"
-	err = m.FileSystem.Rename(fmt.Sprintf("%s", kubectlBinPath), binPath)
+	err = m.FileSystem.Rename(fmt.Sprintf("%s", kubectlBinPath.Name()), binPath)
 	if err != nil {
 		return errors.Wrapf(err, "unable to install the kubectl client binary to %q", binPath)
 	}
 	return nil
 }
 
-func getKubectlApiServerVersion(m *Mixin) (string, error) {
-	var stderr bytes.Buffer
+func getKubectlServerVersion(m *Mixin) (string, error) {
 
-	cmd := m.NewCommand("kubectl", "api-versions")
+	var stderr bytes.Buffer
+	currentKubectl := KubectlVersion{}
+
+	cmd := m.NewCommand("kubectl", "version", "-o", "json")
 	cmd.Stderr = &stderr
 
 	outputBytes, err := cmd.Output()
 	if err != nil {
-		return "", errors.Wrapf(err, "unable to determine kubernetes api server version: %s", stderr.String())
+		return "", errors.Wrapf(err, "unable to determine kubernetes server version: %s", stderr.String())
 	}
-	re := regexp.MustCompile(`v[0-9]*\.[0-9]*\.[0-9]*`)
-	version := re.FindString(string(outputBytes))
+	// Rebuild version json object
+	json.Unmarshal(outputBytes, &currentKubectl)
+
+	version := currentKubectl.ServerVersion.GitVersion
 
 	return version, nil
 }
