@@ -1,0 +1,6 @@
+config:
+  namespaces:
+    - my-namespace-1
+    - my-namespace-2
+    - my-namespace-3
+    - my-namespace-4

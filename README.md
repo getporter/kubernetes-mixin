@@ -39,6 +39,9 @@ porter mixin install kubernetes --version $VERSION --url https://github.com/getp
 ```yaml
 - kubernetes:
     clientVersion: v1.15.5
+    namespaces:
+      - my-namespace-1
+      - my-namespace-2
 ```
 
 ### Mixin Actions Syntax
@@ -52,7 +55,6 @@ install:
       manifests:
         - /cnab/app/manifests/hello
       wait: true
-
 ```
 
 #### Upgrade Action
@@ -64,7 +66,6 @@ upgrade:
       manifests:
         - /cnab/app/manifests/hello
       wait: true
-
 ```
 
 #### Uninstall Action
@@ -76,7 +77,6 @@ uninstall:
       manifests:
         - /cnab/app/manifests/hello
       wait: true
-
 ```
 
 #### Outputs
@@ -85,9 +85,9 @@ The mixin supports extracting resource metadata from Kubernetes as outputs.
 
 ```yaml
 outputs:
-    - name: NAME
-      resourceType: RESOURCE_TYPE
-      resourceName: RESOURCE_TYPE_NAME
-      namespace: NAMESPACE
-      jsonPath: JSON_PATH_DEFINITION
+  - name: NAME
+    resourceType: RESOURCE_TYPE
+    resourceName: RESOURCE_TYPE_NAME
+    namespace: NAMESPACE
+    jsonPath: JSON_PATH_DEFINITION
 ```
