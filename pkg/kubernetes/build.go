@@ -103,3 +103,15 @@ func validate(clientVersion, constraint string) (bool, error) {
 
 	return c.Check(v), nil
 }
+
+func getNamespacesCommand(namespaces []string) (namespaceCommand []string, err error) {
+
+	var commandBuilder []string
+	//
+	for _, namespace := range namespaces {
+		commandBuilder = append(commandBuilder, "kubectl", "create", "namespace", namespace, "||", "true;")
+	}
+	commandBuilder = append([]string{"\nRUN"}, commandBuilder...)
+
+	return commandBuilder, nil
+}
