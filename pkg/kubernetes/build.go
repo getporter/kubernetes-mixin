@@ -3,6 +3,7 @@ package kubernetes
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"text/template"
 
 	"get.porter.sh/porter/pkg/exec/builder"
@@ -24,7 +25,8 @@ chmod a+x /usr/local/bin/kubectl
 )
 
 type MixinConfig struct {
-	ClientVersion string `yaml:"clientVersion,omitempty"`
+	ClientVersion string   `yaml:"clientVersion,omitempty"`
+	Namespaces    []string `yaml:"namespaces,omitempty"`
 }
 
 // BuildInput represents stdin passed to the mixin for the build command.
@@ -72,6 +74,16 @@ func (m *Mixin) Build() error {
 	_, err = fmt.Fprint(m.Out, cmd.String())
 	if err != nil {
 		return err
+	}
+
+	// Go through Namespaces if defined
+	if len(input.Config.Namespaces) > 0 {
+		namespacesCommand, err := getNamespacesCommand(input.Config.Namespaces)
+		if err != nil && m.Debug {
+			fmt.Fprintf(m.Err, "DEBUG: addition of namespace failed: %s\n", err.Error())
+		} else {
+			fmt.Fprintf(m.Out, strings.Join(namespacesCommand, " "))
+		}
 	}
 
 	return nil
