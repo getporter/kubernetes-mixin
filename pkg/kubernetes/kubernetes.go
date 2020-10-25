@@ -21,8 +21,7 @@ const (
 
 type Mixin struct {
 	*context.Context
-	schemas *packr.Box
-	KubectlDownloader
+	schemas                 *packr.Box
 	KubernetesClientVersion string
 }
 
@@ -30,7 +29,6 @@ func New() *Mixin {
 	return &Mixin{
 		Context:                 context.New(),
 		schemas:                 NewSchemaBox(),
-		KubectlDownloader:       KubectlDownloaderImplementation{},
 		KubernetesClientVersion: defaultKubernetesClientVersion,
 	}
 }

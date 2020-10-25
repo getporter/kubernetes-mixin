@@ -15,14 +15,6 @@ import (
 	"golang.org/x/mod/semver"
 )
 
-type KubectlDownloader interface {
-	getServerVersion(m *Mixin) (string, error)
-	installClient(m *Mixin, version string) error
-}
-
-// KubectlDownloaderImplementation implements the KubectlDownloader interface
-type KubectlDownloaderImplementation struct{}
-
 type KubectlVersion struct {
 	ClientVersion struct {
 		Major        string    `json:"major"`
@@ -48,11 +40,9 @@ type KubectlVersion struct {
 	} `json:"serverVersion"`
 }
 
-func (m *Mixin) Init() error {
+func (m *Mixin) init() error {
 
-	kdi := m.KubectlDownloader
-
-	serverVersion, err := kdi.getServerVersion(m)
+	serverVersion, err := getServerVersion(m)
 
 	if err != nil {
 		return err
@@ -64,7 +54,7 @@ func (m *Mixin) Init() error {
 		fmt.Fprintf(m.Out, "Kubectl server version (%s) does not match client version (%s); downloading a compatible client.\n",
 			serverVersion, m.KubernetesClientVersion)
 		// try to install the new client
-		err := kdi.installClient(m, serverVersion)
+		err := installClient(m, serverVersion)
 		if err != nil {
 			return errors.Wrap(err, "unable to install a compatible kubectl client")
 		}
@@ -73,7 +63,7 @@ func (m *Mixin) Init() error {
 	return err
 }
 
-func (kdi KubectlDownloaderImplementation) installClient(m *Mixin, version string) error {
+func installClient(m *Mixin, version string) error {
 
 	url := fmt.Sprintf("https://storage.googleapis.com/kubernetes-release/release/%s/bin/linux/amd64/kubectl", version)
 
@@ -116,7 +106,7 @@ func (kdi KubectlDownloaderImplementation) installClient(m *Mixin, version strin
 	return nil
 }
 
-func (kdi KubectlDownloaderImplementation) getServerVersion(m *Mixin) (string, error) {
+func getServerVersion(m *Mixin) (string, error) {
 
 	var stderr bytes.Buffer
 	currentKubectl := KubectlVersion{}
