@@ -24,12 +24,13 @@ type UninstallArguments struct {
 	Namespace string   `yaml:"namespace"`
 	Manifests []string `yaml:"manifests,omitempty"`
 
-	Force       *bool  `yaml:force,omitempty"`
-	GracePeriod *int   `yaml:"gracePeriod,omitempty"`
-	Selector    string `yaml:"selector,omitempty"`
-	Context  string    `yaml:"context,omitempty"`
-	Timeout     *int   `yaml:"timeout,omitempty"`
-	Wait        *bool  `yaml:"wait,omitempty"`
+	Force          *bool  `yaml:force,omitempty"`
+	GracePeriod    *int   `yaml:"gracePeriod,omitempty"`
+	Selector       string `yaml:"selector,omitempty"`
+	Context        string `yaml:"context,omitempty"`
+	Timeout        *int   `yaml:"timeout,omitempty"`
+	Wait           *bool  `yaml:"wait,omitempty"`
+	IgnoreNotFound *bool  `yaml:"ignoreNotFound,omitempty"`
 }
 
 // Uninstall will delete anything created during the install or upgrade step
@@ -119,6 +120,14 @@ func (m *Mixin) buildUninstallCommand(args UninstallArguments, manifestPath stri
 	if args.Timeout != nil {
 		timeout := *args.Timeout
 		command = append(command, fmt.Sprintf("--timeout=%ds", timeout))
+	}
+
+	ignoreResourceNotFound := false
+	if args.IgnoreNotFound != nil {
+		ignoreResourceNotFound = *args.IgnoreNotFound
+	}
+	if ignoreResourceNotFound {
+		command = append(command, fmt.Sprintf("--ignore-not-found=%t", ignoreResourceNotFound))
 	}
 
 	waitForIt := true

@@ -33,6 +33,7 @@ func TestMixin_UninstallStep(t *testing.T) {
 	withGrace := 1
 
 	timeout := 1
+	ignoreNotFound := true
 
 	uninstallTests := []UnInstallTest{
 		{
@@ -91,7 +92,7 @@ func TestMixin_UninstallStep(t *testing.T) {
 						Description: "Hello",
 					},
 					Manifests: []string{manifestDirectory},
-					Context:  context,
+					Context:   context,
 				},
 			},
 		},
@@ -128,6 +129,19 @@ func TestMixin_UninstallStep(t *testing.T) {
 					},
 					Manifests: []string{manifestDirectory},
 					Timeout:   &timeout,
+				},
+			},
+		},
+		// Insert the ignoreNotFound command
+		{
+			expectedCommand: fmt.Sprintf("%s %s --ignore-not-found=%t --wait", deleteCmd, manifestDirectory, ignoreNotFound),
+			uninstallStep: UninstallStep{
+				UninstallArguments: UninstallArguments{
+					Step: Step{
+						Description: "Hello",
+					},
+					Manifests:      []string{manifestDirectory},
+					IgnoreNotFound: &ignoreNotFound,
 				},
 			},
 		},
