@@ -35,6 +35,7 @@ porter mixin install kubernetes --version $VERSION --url https://github.com/getp
 ### Mixin Configuration
 
 #### Kubernetes client version
+You can use the `clientVersion` field to specify the kubectl CLI version.
 
 ```yaml
 - kubernetes:
@@ -76,6 +77,8 @@ uninstall:
       manifests:
         - /cnab/app/manifests/hello
       wait: true
+
+\* Uninstall automatically applies the --ignore-not-found flag so that you can safely repeat the uninstall action without errors.
 
 ```
 

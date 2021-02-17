@@ -30,7 +30,6 @@ type UninstallArguments struct {
 	Context        string `yaml:"context,omitempty"`
 	Timeout        *int   `yaml:"timeout,omitempty"`
 	Wait           *bool  `yaml:"wait,omitempty"`
-	IgnoreNotFound *bool  `yaml:"ignoreNotFound,omitempty"`
 }
 
 // Uninstall will delete anything created during the install or upgrade step
@@ -80,7 +79,7 @@ func (m *Mixin) Uninstall() error {
 }
 
 func (m *Mixin) buildUninstallCommand(args UninstallArguments, manifestPath string) ([]string, error) {
-	command := []string{"delete", "-f", manifestPath}
+	command := []string{"delete", "--ignore-not-found=true", "-f", manifestPath}
 	if args.Namespace != "" {
 		command = append(command, "-n", args.Namespace)
 	}
@@ -120,14 +119,6 @@ func (m *Mixin) buildUninstallCommand(args UninstallArguments, manifestPath stri
 	if args.Timeout != nil {
 		timeout := *args.Timeout
 		command = append(command, fmt.Sprintf("--timeout=%ds", timeout))
-	}
-
-	ignoreResourceNotFound := false
-	if args.IgnoreNotFound != nil {
-		ignoreResourceNotFound = *args.IgnoreNotFound
-	}
-	if ignoreResourceNotFound {
-		command = append(command, fmt.Sprintf("--ignore-not-found=%t", ignoreResourceNotFound))
 	}
 
 	waitForIt := true

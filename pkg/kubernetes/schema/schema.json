@@ -32,22 +32,26 @@
             },
             "validate": {
               "type": "boolean",
-              "default": "true"
+              "default":"true"
             },
             "wait": {
               "type": "boolean",
-              "default": "true"
+              "default":"true"
             },
             "outputs": {
               "$ref": "#/definitions/outputs"
             }
           },
           "additionalProperties": false,
-          "required": ["description", "manifests"]
+          "required": [
+            "description", "manifests"
+          ]
         }
       },
       "additionalProperties": false,
-      "required": ["kubernetes"]
+      "required": [
+        "kubernetes"
+      ]
     },
     "upgradeStep": {
       "type": "object",
@@ -70,21 +74,21 @@
               }
             },
             "force": {
-              "type": ["boolean", "null"]
+              "type": ["boolean","null"]
             },
-            "gracePeriod": {
+            "gracePeriod" : {
               "type": "integer"
             },
             "overwrite": {
-              "type": ["boolean", "null"],
-              "default": "true"
+              "type": ["boolean","null"],
+              "default":"true"
             },
             "prune": {
-              "type": ["boolean", "null"],
-              "default": "true"
+              "type": ["boolean","null"],
+              "default":"true"
             },
             "record": {
-              "type": ["boolean", "null"]
+              "type": ["boolean","null"]
             },
             "selector": {
               "type": "string"
@@ -92,27 +96,31 @@
             "context": {
               "type": "string"
             },
-            "timeout": {
+            "timeout" : {
               "type": "integer"
             },
             "validate": {
-              "type": ["boolean", "null"],
-              "default": "true"
+              "type": ["boolean","null"],
+              "default":"true"
             },
             "wait": {
-              "type": ["boolean", "null"],
-              "default": "true"
+              "type": ["boolean","null"],
+              "default":"true"
             },
             "outputs": {
               "$ref": "#/definitions/outputs"
             }
           },
           "additionalProperties": false,
-          "required": ["description", "manifests"]
+          "required": [
+            "description", "manifests"
+          ]
         }
       },
       "additionalProperties": false,
-      "required": ["kubernetes"]
+      "required": [
+        "kubernetes"
+      ]
     },
     "invokeStep": {
       "type": "object",
@@ -135,21 +143,21 @@
               }
             },
             "force": {
-              "type": ["boolean", "null"]
+              "type": ["boolean","null"]
             },
-            "gracePeriod": {
+            "gracePeriod" : {
               "type": "integer"
             },
             "overwrite": {
-              "type": ["boolean", "null"],
-              "default": "true"
+              "type": ["boolean","null"],
+              "default":"true"
             },
             "prune": {
-              "type": ["boolean", "null"],
-              "default": "true"
+              "type": ["boolean","null"],
+              "default":"true"
             },
             "record": {
-              "type": ["boolean", "null"]
+              "type": ["boolean","null"]
             },
             "selector": {
               "type": "string"
@@ -157,27 +165,31 @@
             "context": {
               "type": "string"
             },
-            "timeout": {
+            "timeout" : {
               "type": "integer"
             },
             "validate": {
-              "type": ["boolean", "null"],
-              "default": "true"
+              "type": ["boolean","null"],
+              "default":"true"
             },
             "wait": {
-              "type": ["boolean", "null"],
-              "default": "true"
+              "type": ["boolean","null"],
+              "default":"true"
             },
             "outputs": {
               "$ref": "#/definitions/outputs"
             }
           },
           "additionalProperties": false,
-          "required": ["description", "manifests"]
+          "required": [
+            "description", "manifests"
+          ]
         }
       },
       "additionalProperties": false,
-      "required": ["kubernetes"]
+      "required": [
+        "kubernetes"
+      ]
     },
     "uninstallStep": {
       "type": "object",
@@ -200,9 +212,9 @@
               }
             },
             "force": {
-              "type": ["boolean", "null"]
+              "type": ["boolean","null"]
             },
-            "gracePeriod": {
+            "gracePeriod" : {
               "type": "integer"
             },
             "selector": {
@@ -211,24 +223,24 @@
             "context": {
               "type": "string"
             },
-            "timeout": {
+            "timeout" : {
               "type": "integer"
             },
             "wait": {
               "type": "boolean",
-              "default": "true"
-            },
-            "ignoreNotFound": {
-              "type": "boolean",
-              "default": "false"
+              "default":"true"
             }
           },
           "additionalProperties": false,
-          "required": ["description", "manifests"]
+          "required": [
+            "description", "manifests"
+          ]
         }
       },
       "additionalProperties": false,
-      "required": ["kubernetes"]
+      "required": [
+        "kubernetes"
+      ]
     },
     "outputs": {
       "type": "array",
