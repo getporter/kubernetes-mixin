@@ -21,7 +21,7 @@ func TestMixin_UninstallStep(t *testing.T) {
 
 	manifestDirectory := "/cnab/app/manifests"
 
-	deleteCmd := "kubectl delete -f"
+	deleteCmd := "kubectl delete --ignore-not-found=true -f"
 
 	dontWait := false
 
@@ -91,7 +91,7 @@ func TestMixin_UninstallStep(t *testing.T) {
 						Description: "Hello",
 					},
 					Manifests: []string{manifestDirectory},
-					Context:  context,
+					Context:   context,
 				},
 			},
 		},

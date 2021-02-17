@@ -24,12 +24,12 @@ type UninstallArguments struct {
 	Namespace string   `yaml:"namespace"`
 	Manifests []string `yaml:"manifests,omitempty"`
 
-	Force       *bool  `yaml:force,omitempty"`
-	GracePeriod *int   `yaml:"gracePeriod,omitempty"`
-	Selector    string `yaml:"selector,omitempty"`
-	Context  string    `yaml:"context,omitempty"`
-	Timeout     *int   `yaml:"timeout,omitempty"`
-	Wait        *bool  `yaml:"wait,omitempty"`
+	Force          *bool  `yaml:force,omitempty"`
+	GracePeriod    *int   `yaml:"gracePeriod,omitempty"`
+	Selector       string `yaml:"selector,omitempty"`
+	Context        string `yaml:"context,omitempty"`
+	Timeout        *int   `yaml:"timeout,omitempty"`
+	Wait           *bool  `yaml:"wait,omitempty"`
 }
 
 // Uninstall will delete anything created during the install or upgrade step
@@ -79,7 +79,7 @@ func (m *Mixin) Uninstall() error {
 }
 
 func (m *Mixin) buildUninstallCommand(args UninstallArguments, manifestPath string) ([]string, error) {
-	command := []string{"delete", "-f", manifestPath}
+	command := []string{"delete", "--ignore-not-found=true", "-f", manifestPath}
 	if args.Namespace != "" {
 		command = append(command, "-n", args.Namespace)
 	}
