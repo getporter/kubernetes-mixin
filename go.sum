@@ -6,8 +6,8 @@ cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 cloud.google.com/go v0.37.4/go.mod h1:NHPJ89PdicEuT9hdPXMROBD91xc5uRDxsMtSB16k7hw=
 cloud.google.com/go v0.38.0/go.mod h1:990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=
 cloud.google.com/go v0.39.0/go.mod h1:rVLT6fkc8chs9sfPtFc1SBH6em7n+ZoXaG+87tDISts=
-get.porter.sh/porter v0.34.0 h1:TieCC8C7QUbRM7kUEj+d+++8GCy+4nWiXaaOGAXDNkg=
-get.porter.sh/porter v0.34.0/go.mod h1:5HvvZlBgSIyCUctXFiiEiqoGyD4YtzW1ydsXVHH/8go=
+get.porter.sh/porter v0.34.3 h1:DqusYABIwqYd3VwvxGjdhIopVnjSdI4O32zQnT7cNG0=
+get.porter.sh/porter v0.34.3/go.mod h1:5HvvZlBgSIyCUctXFiiEiqoGyD4YtzW1ydsXVHH/8go=
 github.com/Azure/azure-sdk-for-go v19.1.1+incompatible/go.mod h1:9XXNKU+eRnpl9moKnB4QOLf1HestfXbmab5FXxiDBjc=
 github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78/go.mod h1:LmzpDX56iTiv29bbRTIsUNlaFfuhWRQBWjQdVyAevI8=
 github.com/Azure/go-autorest v10.15.5+incompatible/go.mod h1:r+4oMnoxhatjLLJ6zxSWATqVooLgysK6ZNox3g/xq24=
