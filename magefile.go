@@ -13,5 +13,5 @@ import (
 func Publish(mixin string, version string, permalink string) {
 	releases.PrepareMixinForPublish(mixin, version, permalink)
 	releases.PublishMixin(mixin, version, permalink)
-	releases.PublishMixinFeed(mixin, version, permalink)
+	releases.PublishMixinFeed(mixin, version)
 }
