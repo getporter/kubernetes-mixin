@@ -3,7 +3,6 @@ package kubernetes
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"testing"
 
 	"get.porter.sh/porter/pkg/test"
@@ -234,15 +233,14 @@ func TestMixin_ExecuteStep(t *testing.T) {
 		},
 	}
 
-	defer os.Unsetenv(test.ExpectedCommandEnv)
 	for _, upgradeTest := range upgradeTests {
+		upgradeTest := upgradeTest
 		t.Run(upgradeTest.expectedCommand, func(t *testing.T) {
-			os.Setenv(test.ExpectedCommandEnv, upgradeTest.expectedCommand)
-
 			action := ExecuteAction{Steps: []ExecuteStep{upgradeTest.executeStep}}
 			b, _ := yaml.Marshal(action)
 
 			h := NewTestMixin(t)
+			h.Setenv(test.ExpectedCommandEnv, upgradeTest.expectedCommand)
 			h.In = bytes.NewReader(b)
 
 			err := h.Execute()
