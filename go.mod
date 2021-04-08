@@ -5,7 +5,7 @@ go 1.15
 replace github.com/hashicorp/go-plugin => github.com/carolynvs/go-plugin v1.0.1-acceptstdin
 
 require (
-	get.porter.sh/porter v0.34.3
+	get.porter.sh/porter v0.37.2
 	github.com/Masterminds/semver v1.5.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/gobuffalo/packr/v2 v2.8.0
