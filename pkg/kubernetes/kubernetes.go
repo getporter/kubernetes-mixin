@@ -1,5 +1,4 @@
 //go:generate packr2
-
 package kubernetes
 
 import (

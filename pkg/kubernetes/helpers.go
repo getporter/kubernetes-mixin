@@ -11,6 +11,8 @@ type TestMixin struct {
 	TestContext *context.TestContext
 }
 
+const MockkubectlClientVersion string = "v1.15.5"
+
 func NewTestMixin(t *testing.T) *TestMixin {
 	c := context.NewTestContext(t)
 	m := New()

@@ -13,5 +13,6 @@ require (
 	github.com/spf13/cobra v1.0.0
 	github.com/stretchr/testify v1.6.1
 	github.com/xeipuuv/gojsonschema v1.2.0
+	golang.org/x/mod v0.2.0
 	gopkg.in/yaml.v2 v2.2.4
 )
