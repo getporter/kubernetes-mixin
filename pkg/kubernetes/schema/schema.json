@@ -2,25 +2,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "config": {
-      "type": ["string","object"],
+      "type": "object",
       "properties": {
         "kubernetes": {
-          "anyOf": [
-            {
-              "$comment": "This mixin supports optional configuration",
-              "type": "object",
-              "properties": {
-                "clientVersion": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            },
-            {
-              "$comment": "This mixin also supports declaration with no configuration",
-              "enum": ["kubernetes"]
+          "type": "object",
+          "properties": {
+            "clientVersion": {
+              "type": "string"
             }
-          ]
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false,
