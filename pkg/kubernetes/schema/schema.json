@@ -304,7 +304,11 @@
         "$ref": "#/definitions/uninstallStep"
       }
     },
-    "config": {"$ref": "#/definitions/config"}
+    "mixins": {
+      "type": "array",
+      "items": {
+        {"$ref": "#/definitions/config"}
+      }
   },
   "additionalProperties": {
     "type": "array",
