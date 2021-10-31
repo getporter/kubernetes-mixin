@@ -29,6 +29,7 @@ func TestMixin_UninstallStep(t *testing.T) {
 
 	selector := "app=nginx"
 	context := "context"
+	kubeConfig := "$HOME/.kube/config"
 	forceIt := true
 	withGrace := 1
 
@@ -92,6 +93,18 @@ func TestMixin_UninstallStep(t *testing.T) {
 					},
 					Manifests: []string{manifestDirectory},
 					Context:   context,
+				},
+			},
+		},
+		{
+			expectedCommand: fmt.Sprintf("%s %s --kubeconfig=%s --wait", deleteCmd, manifestDirectory, kubeConfig),
+			uninstallStep: UninstallStep{
+				UninstallArguments: UninstallArguments{
+					Step: Step{
+						Description: "Hello",
+					},
+					Manifests:  []string{manifestDirectory},
+					KubeConfig: kubeConfig,
 				},
 			},
 		},

@@ -35,6 +35,7 @@ func TestMixin_InstallStep(t *testing.T) {
 
 	selector := "app=nginx"
 	context := "context"
+	kubeConfig := "$HOME/.kube/config"
 	installTests := []InstallTest{
 		{
 			expectedCommand: fmt.Sprintf("%s %s --wait", installCmd, manifestDirectory),
@@ -122,6 +123,18 @@ func TestMixin_InstallStep(t *testing.T) {
 					},
 					Manifests: []string{manifestDirectory},
 					Context:   context,
+				},
+			},
+		},
+		{
+			expectedCommand: fmt.Sprintf("%s %s --kubeconfig=%s --wait", installCmd, manifestDirectory, kubeConfig),
+			installStep: InstallStep{
+				InstallArguments: InstallArguments{
+					Step: Step{
+						Description: "Hello",
+					},
+					Manifests:  []string{manifestDirectory},
+					KubeConfig: kubeConfig,
 				},
 			},
 		},

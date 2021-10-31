@@ -30,6 +30,9 @@
             "context": {
               "type": "string"
             },
+            "kubeConfig": {
+              "type": "string"
+            },
             "validate": {
               "type": "boolean",
               "default":"true"
@@ -94,6 +97,9 @@
               "type": "string"
             },
             "context": {
+              "type": "string"
+            },
+            "kubeConfig": {
               "type": "string"
             },
             "timeout" : {
@@ -165,6 +171,9 @@
             "context": {
               "type": "string"
             },
+            "kubeConfig": {
+              "type": "string"
+            },
             "timeout" : {
               "type": "integer"
             },
@@ -221,6 +230,9 @@
               "type": "string"
             },
             "context": {
+              "type": "string"
+            },
+            "kubeConfig": {
               "type": "string"
             },
             "timeout" : {
