@@ -1,29 +1,19 @@
 package kubernetes
 
 import (
+	_ "embed"
 	"fmt"
-
-	packr "github.com/gobuffalo/packr/v2"
 )
 
+//go:embed schema/schema.json
+var schema string
+
 func (m *Mixin) PrintSchema() error {
-	schema, err := m.GetSchema()
-	if err != nil {
-		return err
-	}
-
+	schema := m.GetSchema()
 	fmt.Fprintf(m.Out, schema)
-
 	return nil
 }
 
-func (m *Mixin) GetSchema() (string, error) {
-	t := packr.New("schema", "./schema")
-
-	b, err := t.Find("schema.json")
-	if err != nil {
-		return "", err
-	}
-
-	return string(b), nil
+func (m *Mixin) GetSchema() string {
+	return schema
 }
