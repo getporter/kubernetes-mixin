@@ -65,7 +65,7 @@ test-integration: xbuild
 	$(GO) test -tags=integration ./tests/...
 
 publish: bin/porter$(FILE_EXT)
-	go run mage.go Publish $(MIXIN) $(VERSION) $(PERMALINK)
+	go run mage.go Publish $(MIXIN)
 
 bin/porter$(FILE_EXT):
 	curl -fsSLo bin/porter$(FILE_EXT) https://cdn.porter.sh/canary/porter-$(CLIENT_PLATFORM)-$(CLIENT_ARCH)$(FILE_EXT)
