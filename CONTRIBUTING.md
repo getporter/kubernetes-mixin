@@ -29,7 +29,3 @@ Here are the most common Makefile tasks
 * `build` builds both the runtime and client.
 * `install` installs the mixin into **~/.porter/mixins**.
 * `test-unit` runs the unit tests.
-* `clean-packr` removes extra packr files that were a side-effect of the build.
-  Normally this is run automatically but if you run into issues with packr,
-  run this command.
-

@@ -1,5 +1,3 @@
-//go:generate packr2
-
 package kubernetes
 
 import (
@@ -11,7 +9,6 @@ import (
 
 	"get.porter.sh/porter/pkg/context"
 	"github.com/ghodss/yaml"
-	"github.com/gobuffalo/packr/v2"
 	"github.com/pkg/errors"
 	"github.com/xeipuuv/gojsonschema"
 )
@@ -22,20 +19,14 @@ const (
 
 type Mixin struct {
 	*context.Context
-	schemas                 *packr.Box
 	KubernetesClientVersion string
 }
 
 func New() *Mixin {
 	return &Mixin{
 		Context:                 context.New(),
-		schemas:                 NewSchemaBox(),
 		KubernetesClientVersion: defaultKubernetesClientVersion,
 	}
-}
-
-func NewSchemaBox() *packr.Box {
-	return packr.New("get.porter.sh/porter/pkg/kubernetes/schema", "./schema")
 }
 
 func (m *Mixin) getCommandFile(commandFile string, w io.Writer) ([]byte, error) {
@@ -65,10 +56,7 @@ func (m *Mixin) ValidatePayload(b []byte) error {
 	manifestLoader := gojsonschema.NewGoLoader(s)
 
 	// Load the step schema
-	schema, err := m.GetSchema()
-	if err != nil {
-		return err
-	}
+	schema := m.GetSchema()
 	schemaLoader := gojsonschema.NewStringLoader(schema)
 
 	validator, err := gojsonschema.NewSchema(schemaLoader)
