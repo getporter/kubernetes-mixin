@@ -39,7 +39,7 @@ You can use the `clientVersion` field to specify the kubectl CLI version.
 
 ```yaml
 - kubernetes:
-    clientVersion: v1.20.13
+    clientVersion: v1.20.13 # Replace this value with the latest patched version of kubectl
 ```
 
 ### Mixin Actions Syntax
