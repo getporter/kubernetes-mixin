@@ -3,15 +3,50 @@
 package main
 
 import (
+	"get.porter.sh/porter/mage/mixins"
+	// Import common targets that all mixins should expose to the user
 	// mage:import
-	"get.porter.sh/porter/mage/releases"
+	_ "get.porter.sh/porter/mage"
 )
 
-// We are migrating to mage, but for now keep using make as the main build script interface.
+const (
+	mixinName    = "kubernetes"
+	mixinPackage = "get.porter.sh/mixin/kubernetes"
+	mixinBin     = "bin/mixins/" + mixinName
+)
 
-// Publish the cross-compiled binaries.
-func Publish(mixin string) {
-	releases.PrepareMixinForPublish(mixin)
-	releases.PublishMixin(mixin)
-	releases.PublishMixinFeed(mixin)
+var magefile = mixins.NewMagefile(mixinPackage, mixinName, mixinBin)
+
+// Build the mixin
+func Build() {
+	magefile.Build()
+}
+
+// Cross-compile the mixin before a release
+func XBuildAll() {
+	magefile.XBuildAll()
+}
+
+// Run unit tests
+func TestUnit() {
+	magefile.TestUnit()
+}
+
+func Test() {
+	magefile.Test()
+}
+
+// Publish the mixin to github
+func Publish() {
+	magefile.Publish()
+}
+
+// Install the mixin
+func Install() {
+	magefile.Install()
+}
+
+// Remove generated build files
+func Clean() {
+	magefile.Clean()
 }
