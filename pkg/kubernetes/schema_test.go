@@ -31,6 +31,7 @@ func TestMixin_ValidatePayload(t *testing.T) {
 		error string
 	}{
 		{"install", "testdata/install-input.yaml", true, ""},
+		{"install-with-kubeconfig", "testdata/install-input-with-kubeconfig.yaml", true, ""},
 		{"upgrade", "testdata/upgrade-input.yaml", true, ""},
 		{"invoke", "testdata/invoke-input.yaml", true, ""},
 		{"uninstall", "testdata/uninstall-input.yaml", true, ""},

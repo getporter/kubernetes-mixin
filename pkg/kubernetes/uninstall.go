@@ -24,12 +24,13 @@ type UninstallArguments struct {
 	Namespace string   `yaml:"namespace"`
 	Manifests []string `yaml:"manifests,omitempty"`
 
-	Force          *bool  `yaml:force,omitempty"`
-	GracePeriod    *int   `yaml:"gracePeriod,omitempty"`
-	Selector       string `yaml:"selector,omitempty"`
-	Context        string `yaml:"context,omitempty"`
-	Timeout        *int   `yaml:"timeout,omitempty"`
-	Wait           *bool  `yaml:"wait,omitempty"`
+	Force       *bool  `yaml:force,omitempty"`
+	GracePeriod *int   `yaml:"gracePeriod,omitempty"`
+	Selector    string `yaml:"selector,omitempty"`
+	Context     string `yaml:"context,omitempty"`
+	KubeConfig  string `yaml:"kubeConfig,omitempty"`
+	Timeout     *int   `yaml:"timeout,omitempty"`
+	Wait        *bool  `yaml:"wait,omitempty"`
 }
 
 // Uninstall will delete anything created during the install or upgrade step
@@ -114,6 +115,10 @@ func (m *Mixin) buildUninstallCommand(args UninstallArguments, manifestPath stri
 
 	if args.Context != "" {
 		command = append(command, fmt.Sprintf("--context=%s", args.Context))
+	}
+
+	if args.KubeConfig != "" {
+		command = append(command, fmt.Sprintf("--kubeconfig=%s", args.KubeConfig))
 	}
 
 	if args.Timeout != nil {
