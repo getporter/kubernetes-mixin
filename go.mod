@@ -7,12 +7,16 @@ go 1.17
 // Copy any additional replace directives from Porter's go.mod file
 // They must match the replaces used by porter everything to compile
 replace (
-	get.porter.sh/porter => github.com/carolynvs/porter v1.0.0-alpha.6.0.20220131210910-c3a1333fbaa2
+
+	// expose-ast
+	// https://github.com/osteele/liquid/pull/59
+	github.com/osteele/liquid => github.com/carolynvs/liquid v1.2.5-0.20220131221838-2e107bef298f
+	// Fixes https://github.com/spf13/viper/issues/761
 	github.com/spf13/viper => github.com/getporter/viper v1.7.1-porter.2.0.20210514172839-3ea827168363
 )
 
 require (
-	get.porter.sh/porter v1.0.0-alpha.8
+	get.porter.sh/porter v1.0.0-alpha.9
 	github.com/Masterminds/semver v1.5.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/pkg/errors v0.9.1
@@ -72,6 +76,8 @@ require (
 	github.com/nwaples/rardecode v1.1.0 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.4 // indirect
+	github.com/osteele/liquid v1.2.4 // indirect
+	github.com/osteele/tuesday v1.0.3 // indirect
 	github.com/pelletier/go-toml v1.9.1 // indirect
 	github.com/pierrec/lz4/v4 v4.0.3 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
