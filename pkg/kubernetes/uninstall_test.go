@@ -149,12 +149,12 @@ func TestMixin_UninstallStep(t *testing.T) {
 	defer os.Unsetenv(test.ExpectedCommandEnv)
 	for _, uninstallTest := range uninstallTests {
 		t.Run(uninstallTest.expectedCommand, func(t *testing.T) {
-			os.Setenv(test.ExpectedCommandEnv, uninstallTest.expectedCommand)
+			h := NewTestMixin(t)
+			h.Setenv(test.ExpectedCommandEnv, uninstallTest.expectedCommand)
 
 			action := UninstallAction{Steps: []UninstallStep{uninstallTest.uninstallStep}}
 			b, _ := yaml.Marshal(action)
 
-			h := NewTestMixin(t)
 			h.In = bytes.NewReader(b)
 
 			err := h.Uninstall()

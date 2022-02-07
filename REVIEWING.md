@@ -10,7 +10,7 @@ Guide][review].
 
 🧀💨
 
-All mixins follow the same process for [cutting a release][release]. There is an additional step after tagging the release. When any documenation on the readme is changed, update the matching documenation page for the mixin on the porter website:
+All mixins follow the same process for [cutting a release][release]. There is an additional step after tagging the release. When any documentation on the readme is changed, update the matching documenation page for the mixin on the porter website:
 
 https://porter.sh/src/docs/content/mixins
 

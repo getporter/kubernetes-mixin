@@ -56,7 +56,6 @@ func (m *Mixin) ValidatePayload(b []byte) error {
 	manifestLoader := gojsonschema.NewGoLoader(s)
 
 	// Load the step schema
-	schema := m.GetSchema()
 	schemaLoader := gojsonschema.NewStringLoader(schema)
 
 	validator, err := gojsonschema.NewSchema(schemaLoader)

@@ -12,20 +12,20 @@ project.
 ---
 
 * [Initial setup](#initial-setup)
-* [Makefile explained](#makefile-explained)
+* [Magefile explained](#magefile-explained)
 
 ---
 
 # Initial setup
 
 You need to have [porter installed](https://porter.sh/install) first. Then run
-`make build install`. This will build and install the mixin into your porter
+`mage build install`. This will build and install the mixin into your porter
 home directory.
 
-## Makefile explained
+## Magefile explained
 
-Here are the most common Makefile tasks
+Here are the most common [Magefile](https://magefile.org) tasks:
 
 * `build` builds both the runtime and client.
 * `install` installs the mixin into **~/.porter/mixins**.
-* `test-unit` runs the unit tests.
+* `testUnit` runs the unit tests.
