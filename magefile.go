@@ -41,6 +41,11 @@ func Publish() {
 	magefile.Publish()
 }
 
+// Test the publish logic against your github fork
+func TestPublish(username string) {
+	magefile.TestPublish(username)
+}
+
 // Install the mixin
 func Install() {
 	magefile.Install()

@@ -7,7 +7,6 @@ go 1.17
 // Copy any additional replace directives from Porter's go.mod file
 // They must match the replaces used by porter everything to compile
 replace (
-
 	// expose-ast
 	// https://github.com/osteele/liquid/pull/59
 	github.com/osteele/liquid => github.com/carolynvs/liquid v1.2.5-0.20220131221838-2e107bef298f
@@ -16,7 +15,7 @@ replace (
 )
 
 require (
-	get.porter.sh/porter v1.0.0-alpha.9
+	get.porter.sh/porter v1.0.0-alpha.13
 	github.com/Masterminds/semver v1.5.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/pkg/errors v0.9.1
@@ -35,16 +34,15 @@ require (
 	github.com/andybalholm/brotli v1.0.0 // indirect
 	github.com/andybalholm/cascadia v1.0.0 // indirect
 	github.com/carolynvs/aferox v0.3.0 // indirect
-	github.com/carolynvs/magex v0.6.0 // indirect
+	github.com/carolynvs/magex v0.6.1 // indirect
 	github.com/cbroglie/mustache v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.1 // indirect
-	github.com/cnabio/cnab-go v0.21.0 // indirect
+	github.com/cnabio/cnab-go v0.23.0 // indirect
 	github.com/cyberphone/json-canonicalization v0.0.0-20210303052042-6bc126869bf4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8 // indirect
 	github.com/gobuffalo/logger v1.0.4 // indirect
 	github.com/gobuffalo/packd v1.0.0 // indirect
 	github.com/gobuffalo/packr/v2 v2.8.1 // indirect
@@ -60,6 +58,7 @@ require (
 	github.com/karrick/godirwalk v1.16.1 // indirect
 	github.com/klauspost/compress v1.12.3 // indirect
 	github.com/klauspost/pgzip v1.2.4 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/magefile/mage v1.11.0 // indirect
 	github.com/magiconair/properties v1.8.1 // indirect
 	github.com/markbates/errx v1.1.0 // indirect
@@ -73,17 +72,20 @@ require (
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/mmcdole/gofeed v1.0.0-beta2 // indirect
 	github.com/mmcdole/goxpp v0.0.0-20181012175147-0068e33feabf // indirect
+	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/nwaples/rardecode v1.1.0 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.4 // indirect
-	github.com/osteele/liquid v1.2.4 // indirect
+	github.com/osteele/liquid v1.3.0 // indirect
 	github.com/osteele/tuesday v1.0.3 // indirect
 	github.com/pelletier/go-toml v1.9.1 // indirect
 	github.com/pierrec/lz4/v4 v4.0.3 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/qri-io/jsonpointer v0.1.1 // indirect
 	github.com/qri-io/jsonschema v0.2.2-0.20210723092138-2eb22ee8115f // indirect
+	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
+	github.com/smartystreets/assertions v1.0.0 // indirect
 	github.com/spf13/afero v1.5.1 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
@@ -117,6 +119,7 @@ require (
 	google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a // indirect
 	google.golang.org/grpc v1.41.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
+	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/ini.v1 v1.56.0 // indirect
 	gopkg.in/op/go-logging.v1 v1.0.0-20160211212156-b2cb9fa56473 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
