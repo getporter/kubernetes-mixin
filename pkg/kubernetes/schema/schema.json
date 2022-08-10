@@ -1,6 +1,25 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "config": {
+      "description": "Configuration that can be set when the mixin is declared",
+      "type": "object",
+      "properties": {
+        "kubernetes": {
+          "description": "kubernetes mixin configuration",
+          "type": "object",
+          "properties": {
+            "clientVersion": {
+              "description": "Version of kubectl to install in the bundle",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": ["kubernetes"]
+    },
     "installStep": {
       "type": "object",
       "properties": {
