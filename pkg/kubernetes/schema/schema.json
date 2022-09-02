@@ -1,6 +1,35 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "declaration": {
+      "oneOf": [
+        {
+          "description": "Declare the kubernetes mixin without configuration",
+          "type": "string",
+          "enum": ["kubernetes"]
+        },
+        {"$ref": "#/definitions/config"}
+      ]
+    },
+    "config": {
+      "description": "Declare the kubernetes mixin with additional configuration",
+      "type": "object",
+      "properties": {
+        "kubernetes": {
+          "description": "kubernetes mixin configuration",
+          "type": "object",
+          "properties": {
+            "clientVersion": {
+              "description": "Version of kubectl to install in the bundle",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": ["kubernetes"]
+    },
     "installStep": {
       "type": "object",
       "properties": {
@@ -299,6 +328,10 @@
       "items": {
         "$ref": "#/definitions/uninstallStep"
       }
+    },
+    "mixins": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/declaration" }
     }
   },
   "additionalProperties": {
