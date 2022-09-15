@@ -25,7 +25,7 @@ type UninstallArguments struct {
 	Namespace string   `yaml:"namespace"`
 	Manifests []string `yaml:"manifests,omitempty"`
 
-	Force       *bool  `yaml:force,omitempty"`
+	Force       *bool  `yaml:"force,omitempty"`
 	GracePeriod *int   `yaml:"gracePeriod,omitempty"`
 	Selector    string `yaml:"selector,omitempty"`
 	Context     string `yaml:"context,omitempty"`
