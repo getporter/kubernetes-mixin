@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
 	"testing"
@@ -9,7 +10,7 @@ import (
 	"get.porter.sh/porter/pkg/test"
 	"github.com/stretchr/testify/require"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type InstallTest struct {
@@ -34,7 +35,7 @@ func TestMixin_InstallStep(t *testing.T) {
 	namespace := "meditations"
 
 	selector := "app=nginx"
-	context := "context"
+	k8scontext := "context"
 	kubeConfig := "$HOME/.kube/config"
 	installTests := []InstallTest{
 		{
@@ -115,14 +116,14 @@ func TestMixin_InstallStep(t *testing.T) {
 			},
 		},
 		{
-			expectedCommand: fmt.Sprintf("%s %s --context=%s --wait", installCmd, manifestDirectory, context),
+			expectedCommand: fmt.Sprintf("%s %s --context=%s --wait", installCmd, manifestDirectory, k8scontext),
 			installStep: InstallStep{
 				InstallArguments: InstallArguments{
 					Step: Step{
 						Description: "Hello",
 					},
 					Manifests: []string{manifestDirectory},
-					Context:   context,
+					Context:   k8scontext,
 				},
 			},
 		},
@@ -143,6 +144,7 @@ func TestMixin_InstallStep(t *testing.T) {
 	defer os.Unsetenv(test.ExpectedCommandEnv)
 	for _, installTest := range installTests {
 		t.Run(installTest.expectedCommand, func(t *testing.T) {
+			ctx := context.Background()
 			os.Setenv(test.ExpectedCommandEnv, installTest.expectedCommand)
 
 			action := InstallAction{Steps: []InstallStep{installTest.installStep}}
@@ -151,7 +153,7 @@ func TestMixin_InstallStep(t *testing.T) {
 			h := NewTestMixin(t)
 			h.In = bytes.NewReader(b)
 
-			err := h.Install()
+			err := h.Install(ctx)
 
 			require.NoError(t, err)
 		})

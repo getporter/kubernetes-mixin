@@ -1,13 +1,14 @@
 package kubernetes
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
 
 	"github.com/pkg/errors"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type ExecuteAction struct {
@@ -59,7 +60,7 @@ type ExecuteInstruction struct {
 }
 
 // Execute will reapply manifests using kubectl
-func (m *Mixin) Execute() error {
+func (m *Mixin) Execute(ctx context.Context) error {
 
 	payload, err := m.getPayloadData()
 	if err != nil {
@@ -84,7 +85,7 @@ func (m *Mixin) Execute() error {
 		if err != nil {
 			return err
 		}
-		cmd := m.NewCommand("kubectl", commandPayload...)
+		cmd := m.NewCommand(ctx, "kubectl", commandPayload...)
 		commands = append(commands, cmd)
 	}
 
@@ -104,7 +105,7 @@ func (m *Mixin) Execute() error {
 		}
 	}
 
-	err = m.handleOutputs(step.Outputs)
+	err = m.handleOutputs(ctx, step.Outputs)
 	return err
 }
 

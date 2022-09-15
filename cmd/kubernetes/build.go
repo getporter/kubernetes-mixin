@@ -10,7 +10,7 @@ func buildBuildCommand(m *kubernetes.Mixin) *cobra.Command {
 		Use:   "build",
 		Short: "Generate Dockerfile contribution for invocation image",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return m.Build()
+			return m.Build(cmd.Context())
 		},
 	}
 	return cmd

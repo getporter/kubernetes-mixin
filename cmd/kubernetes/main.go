@@ -30,7 +30,8 @@ func buildRootCommand(in io.Reader) *cobra.Command {
 		SilenceUsage: true,
 	}
 
-	cmd.PersistentFlags().BoolVar(&mixin.Debug, "debug", false, "Enable debug logging")
+	cmd.PersistentFlags().BoolVar(&mixin.DebugMode, "debug", false, "Enable debug logging")
+
 	cmd.AddCommand(buildVersionCommand(mixin))
 	cmd.AddCommand(buildBuildCommand(mixin))
 	cmd.AddCommand(buildInstallCommand(mixin))

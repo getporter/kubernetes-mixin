@@ -3,16 +3,16 @@ package kubernetes
 import (
 	"testing"
 
-	"get.porter.sh/porter/pkg/context"
+	"get.porter.sh/porter/pkg/portercontext"
 )
 
 type TestMixin struct {
 	*Mixin
-	TestContext *context.TestContext
+	TestContext *portercontext.TestContext
 }
 
 func NewTestMixin(t *testing.T) *TestMixin {
-	c := context.NewTestContext(t)
+	c := portercontext.NewTestContext(t)
 	m := New()
 	m.Context = c.Context
 	return &TestMixin{

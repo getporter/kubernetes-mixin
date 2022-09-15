@@ -1,13 +1,14 @@
 package kubernetes
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
 
 	"github.com/pkg/errors"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type UninstallAction struct {
@@ -34,7 +35,7 @@ type UninstallArguments struct {
 }
 
 // Uninstall will delete anything created during the install or upgrade step
-func (m *Mixin) Uninstall() error {
+func (m *Mixin) Uninstall(ctx context.Context) error {
 	payload, err := m.getPayloadData()
 	if err != nil {
 		return err
@@ -58,7 +59,7 @@ func (m *Mixin) Uninstall() error {
 		if err != nil {
 			return err
 		}
-		cmd := m.NewCommand("kubectl", commandPayload...)
+		cmd := m.NewCommand(ctx, "kubectl", commandPayload...)
 		commands = append(commands, cmd)
 	}
 

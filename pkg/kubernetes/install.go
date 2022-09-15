@@ -1,13 +1,14 @@
 package kubernetes
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
 
 	"github.com/pkg/errors"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type InstallAction struct {
@@ -31,7 +32,7 @@ type InstallArguments struct {
 	Wait       *bool    `yaml:"wait,omitempty"`
 }
 
-func (m *Mixin) Install() error {
+func (m *Mixin) Install(ctx context.Context) error {
 	payload, err := m.getPayloadData()
 	if err != nil {
 		return err
@@ -54,7 +55,7 @@ func (m *Mixin) Install() error {
 		if err != nil {
 			return err
 		}
-		cmd := m.NewCommand("kubectl", commandPayload...)
+		cmd := m.NewCommand(ctx, "kubectl", commandPayload...)
 		commands = append(commands, cmd)
 	}
 
@@ -74,7 +75,7 @@ func (m *Mixin) Install() error {
 		}
 	}
 
-	err = m.handleOutputs(step.Outputs)
+	err = m.handleOutputs(ctx, step.Outputs)
 	return err
 }
 
