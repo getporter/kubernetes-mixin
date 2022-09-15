@@ -25,7 +25,7 @@ func TestMixin_Build(t *testing.T) {
 		err := m.Build(ctx)
 		require.NoError(t, err)
 
-		wantOutput := fmt.Sprintf(buildOutputTemplate, "v1.15.5")
+		wantOutput := fmt.Sprintf(buildOutputTemplate, "v1.25.1")
 
 		gotOutput := m.TestContext.GetOutput()
 		assert.Equal(t, wantOutput, gotOutput)

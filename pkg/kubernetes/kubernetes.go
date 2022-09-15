@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	defaultKubernetesClientVersion string = "v1.15.5"
+	defaultKubernetesClientVersion string = "v1.25.1"
 )
 
 type Mixin struct {
