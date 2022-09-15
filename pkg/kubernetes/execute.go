@@ -93,14 +93,18 @@ func (m *Mixin) Execute(ctx context.Context) error {
 		cmd.Stdout = m.Out
 		cmd.Stderr = m.Err
 
+		prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
+		if m.DebugMode {
+			fmt.Fprintln(m.Err, prettyCmd)
+		}
+
 		err = cmd.Start()
 		if err != nil {
-			prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
 			return errors.Wrap(err, fmt.Sprintf("couldn't run command %s", prettyCmd))
 		}
+
 		err = cmd.Wait()
 		if err != nil {
-			prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
 			return errors.Wrap(err, fmt.Sprintf("error running command %s", prettyCmd))
 		}
 	}
