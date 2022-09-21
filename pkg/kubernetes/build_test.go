@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"testing"
@@ -19,25 +20,25 @@ chmod a+x /usr/local/bin/kubectl
 
 func TestMixin_Build(t *testing.T) {
 	t.Run("build with the default Kubernetes version", func(t *testing.T) {
+		ctx := context.Background()
 		m := NewTestMixin(t)
-		m.Debug = false
-		err := m.Build()
+		err := m.Build(ctx)
 		require.NoError(t, err)
 
-		wantOutput := fmt.Sprintf(buildOutputTemplate, "v1.15.5")
+		wantOutput := fmt.Sprintf(buildOutputTemplate, "v1.25.1")
 
 		gotOutput := m.TestContext.GetOutput()
 		assert.Equal(t, wantOutput, gotOutput)
 	})
 
 	t.Run("build with custom Kubernetes version", func(t *testing.T) {
+		ctx := context.Background()
 		b, err := ioutil.ReadFile("testdata/build-input-with-version.yaml")
 		require.NoError(t, err)
 
 		m := NewTestMixin(t)
-		m.Debug = false
 		m.In = bytes.NewReader(b)
-		err = m.Build()
+		err = m.Build(ctx)
 		require.NoError(t, err)
 
 		wantOutput := fmt.Sprintf(buildOutputTemplate, "v1.18.3")

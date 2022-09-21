@@ -2,13 +2,14 @@ package kubernetes
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"testing"
 
 	"get.porter.sh/porter/pkg/test"
 	"github.com/stretchr/testify/require"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type ExecuteTest struct {
@@ -31,7 +32,7 @@ func TestMixin_ExecuteStep(t *testing.T) {
 
 	selector := "app=nginx"
 
-	context := "context"
+	k8scontext := "context"
 
 	forceIt := true
 	withGrace := 1
@@ -146,7 +147,7 @@ func TestMixin_ExecuteStep(t *testing.T) {
 			},
 		},
 		{
-			expectedCommand: fmt.Sprintf("%s %s --context=%s --wait", upgradeCmd, manifestDirectory, context),
+			expectedCommand: fmt.Sprintf("%s %s --context=%s --wait", upgradeCmd, manifestDirectory, k8scontext),
 			executeStep: ExecuteStep{
 				ExecuteInstruction: ExecuteInstruction{
 					InstallArguments: InstallArguments{
@@ -154,7 +155,7 @@ func TestMixin_ExecuteStep(t *testing.T) {
 							Description: "Hello",
 						},
 						Manifests: []string{manifestDirectory},
-						Context:   context,
+						Context:   k8scontext,
 					},
 				},
 			},
@@ -236,6 +237,8 @@ func TestMixin_ExecuteStep(t *testing.T) {
 	for _, upgradeTest := range upgradeTests {
 		upgradeTest := upgradeTest
 		t.Run(upgradeTest.expectedCommand, func(t *testing.T) {
+			ctx := context.Background()
+
 			action := ExecuteAction{Steps: []ExecuteStep{upgradeTest.executeStep}}
 			b, _ := yaml.Marshal(action)
 
@@ -243,7 +246,7 @@ func TestMixin_ExecuteStep(t *testing.T) {
 			h.Setenv(test.ExpectedCommandEnv, upgradeTest.expectedCommand)
 			h.In = bytes.NewReader(b)
 
-			err := h.Execute()
+			err := h.Execute(ctx)
 
 			require.NoError(t, err)
 		})

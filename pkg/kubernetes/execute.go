@@ -1,13 +1,14 @@
 package kubernetes
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
 
 	"github.com/pkg/errors"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type ExecuteAction struct {
@@ -59,7 +60,7 @@ type ExecuteInstruction struct {
 }
 
 // Execute will reapply manifests using kubectl
-func (m *Mixin) Execute() error {
+func (m *Mixin) Execute(ctx context.Context) error {
 
 	payload, err := m.getPayloadData()
 	if err != nil {
@@ -84,7 +85,7 @@ func (m *Mixin) Execute() error {
 		if err != nil {
 			return err
 		}
-		cmd := m.NewCommand("kubectl", commandPayload...)
+		cmd := m.NewCommand(ctx, "kubectl", commandPayload...)
 		commands = append(commands, cmd)
 	}
 
@@ -92,19 +93,23 @@ func (m *Mixin) Execute() error {
 		cmd.Stdout = m.Out
 		cmd.Stderr = m.Err
 
+		prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
+		if m.DebugMode {
+			fmt.Fprintln(m.Err, prettyCmd)
+		}
+
 		err = cmd.Start()
 		if err != nil {
-			prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
 			return errors.Wrap(err, fmt.Sprintf("couldn't run command %s", prettyCmd))
 		}
+
 		err = cmd.Wait()
 		if err != nil {
-			prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
 			return errors.Wrap(err, fmt.Sprintf("error running command %s", prettyCmd))
 		}
 	}
 
-	err = m.handleOutputs(step.Outputs)
+	err = m.handleOutputs(ctx, step.Outputs)
 	return err
 }
 

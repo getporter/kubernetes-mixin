@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
 	"testing"
@@ -9,7 +10,7 @@ import (
 	"get.porter.sh/porter/pkg/test"
 	"github.com/stretchr/testify/require"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type UnInstallTest struct {
@@ -28,7 +29,7 @@ func TestMixin_UninstallStep(t *testing.T) {
 	namespace := "meditations"
 
 	selector := "app=nginx"
-	context := "context"
+	k8scontext := "context"
 	kubeConfig := "$HOME/.kube/config"
 	forceIt := true
 	withGrace := 1
@@ -85,14 +86,14 @@ func TestMixin_UninstallStep(t *testing.T) {
 			},
 		},
 		{
-			expectedCommand: fmt.Sprintf("%s %s --context=%s --wait", deleteCmd, manifestDirectory, context),
+			expectedCommand: fmt.Sprintf("%s %s --context=%s --wait", deleteCmd, manifestDirectory, k8scontext),
 			uninstallStep: UninstallStep{
 				UninstallArguments: UninstallArguments{
 					Step: Step{
 						Description: "Hello",
 					},
 					Manifests: []string{manifestDirectory},
-					Context:   context,
+					Context:   k8scontext,
 				},
 			},
 		},
@@ -149,6 +150,7 @@ func TestMixin_UninstallStep(t *testing.T) {
 	defer os.Unsetenv(test.ExpectedCommandEnv)
 	for _, uninstallTest := range uninstallTests {
 		t.Run(uninstallTest.expectedCommand, func(t *testing.T) {
+			ctx := context.Background()
 			h := NewTestMixin(t)
 			h.Setenv(test.ExpectedCommandEnv, uninstallTest.expectedCommand)
 
@@ -157,7 +159,7 @@ func TestMixin_UninstallStep(t *testing.T) {
 
 			h.In = bytes.NewReader(b)
 
-			err := h.Uninstall()
+			err := h.Uninstall(ctx)
 
 			require.NoError(t, err)
 		})

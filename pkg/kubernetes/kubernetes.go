@@ -2,29 +2,30 @@ package kubernetes
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"strings"
 
-	"get.porter.sh/porter/pkg/context"
+	"get.porter.sh/porter/pkg/runtime"
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 	"github.com/xeipuuv/gojsonschema"
 )
 
 const (
-	defaultKubernetesClientVersion string = "v1.15.5"
+	defaultKubernetesClientVersion string = "v1.25.1"
 )
 
 type Mixin struct {
-	*context.Context
+	runtime.RuntimeConfig
 	KubernetesClientVersion string
 }
 
 func New() *Mixin {
 	return &Mixin{
-		Context:                 context.New(),
+		RuntimeConfig:           runtime.NewConfig(),
 		KubernetesClientVersion: defaultKubernetesClientVersion,
 	}
 }
@@ -79,17 +80,17 @@ func (m *Mixin) ValidatePayload(b []byte) error {
 	return nil
 }
 
-func (m *Mixin) getOutput(resourceType, resourceName, namespace, jsonPath string) ([]byte, error) {
+func (m *Mixin) getOutput(ctx context.Context, resourceType, resourceName, namespace, jsonPath string) ([]byte, error) {
 	args := []string{"get", resourceType, resourceName}
 	args = append(args, fmt.Sprintf("-o=jsonpath=%s", jsonPath))
 	if namespace != "" {
 		args = append(args, fmt.Sprintf("--namespace=%s", namespace))
 	}
-	cmd := m.NewCommand("kubectl", args...)
+	cmd := m.NewCommand(ctx, "kubectl", args...)
 	cmd.Stderr = m.Err
 
 	prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
-	if m.Debug {
+	if m.DebugMode {
 		fmt.Fprintln(m.Err, prettyCmd)
 	}
 	out, err := cmd.Output()
@@ -100,10 +101,10 @@ func (m *Mixin) getOutput(resourceType, resourceName, namespace, jsonPath string
 	return out, nil
 }
 
-func (m *Mixin) handleOutputs(outputs []KubernetesOutput) error {
+func (m *Mixin) handleOutputs(ctx context.Context, outputs []KubernetesOutput) error {
 	//Now get the outputs
 	for _, output := range outputs {
-		bytes, err := m.getOutput(
+		bytes, err := m.getOutput(ctx,
 			output.ResourceType,
 			output.ResourceName,
 			output.Namespace,

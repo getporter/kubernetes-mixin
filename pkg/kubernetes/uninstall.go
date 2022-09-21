@@ -1,13 +1,14 @@
 package kubernetes
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"strings"
 
 	"github.com/pkg/errors"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type UninstallAction struct {
@@ -24,7 +25,7 @@ type UninstallArguments struct {
 	Namespace string   `yaml:"namespace"`
 	Manifests []string `yaml:"manifests,omitempty"`
 
-	Force       *bool  `yaml:force,omitempty"`
+	Force       *bool  `yaml:"force,omitempty"`
 	GracePeriod *int   `yaml:"gracePeriod,omitempty"`
 	Selector    string `yaml:"selector,omitempty"`
 	Context     string `yaml:"context,omitempty"`
@@ -34,7 +35,7 @@ type UninstallArguments struct {
 }
 
 // Uninstall will delete anything created during the install or upgrade step
-func (m *Mixin) Uninstall() error {
+func (m *Mixin) Uninstall(ctx context.Context) error {
 	payload, err := m.getPayloadData()
 	if err != nil {
 		return err
@@ -58,21 +59,26 @@ func (m *Mixin) Uninstall() error {
 		if err != nil {
 			return err
 		}
-		cmd := m.NewCommand("kubectl", commandPayload...)
+		cmd := m.NewCommand(ctx, "kubectl", commandPayload...)
 		commands = append(commands, cmd)
 	}
 
 	for _, cmd := range commands {
 		cmd.Stdout = m.Out
 		cmd.Stderr = m.Err
+
+		prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
+		if m.DebugMode {
+			fmt.Fprintln(m.Err, prettyCmd)
+		}
+
 		err = cmd.Start()
 		if err != nil {
-			prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
 			return errors.Wrap(err, fmt.Sprintf("couldn't run command %s", prettyCmd))
 		}
+
 		err = cmd.Wait()
 		if err != nil {
-			prettyCmd := fmt.Sprintf("%s%s", cmd.Dir, strings.Join(cmd.Args, " "))
 			return errors.Wrap(err, fmt.Sprintf("error running command %s", prettyCmd))
 		}
 	}

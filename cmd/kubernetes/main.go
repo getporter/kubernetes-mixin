@@ -1,42 +1,76 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
+	"runtime/debug"
 
 	"get.porter.sh/mixin/kubernetes/pkg/kubernetes"
+	"get.porter.sh/porter/pkg/cli"
 	"github.com/spf13/cobra"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 func main() {
-	cmd := buildRootCommand(os.Stdin)
-	if err := cmd.Execute(); err != nil {
-		fmt.Printf("err: %s\n", err)
-		os.Exit(1)
+	run := func() int {
+		ctx := context.Background()
+		m := kubernetes.New()
+		if err := m.ConfigureLogging(ctx); err != nil {
+			fmt.Println(err)
+			os.Exit(cli.ExitCodeErr)
+		}
+		cmd := buildRootCommand(m, os.Stdin)
+
+		// We don't have tracing working inside a bundle working currently.
+		// We are using StartRootSpan anyway because it creates a TraceLogger and sets it
+		// on the context, so we can grab it later
+		ctx, log := m.StartRootSpan(ctx, "kubernetes")
+		defer func() {
+			// Capture panics and trace them
+			if panicErr := recover(); panicErr != nil {
+				log.Error(fmt.Errorf("%s", panicErr),
+					attribute.Bool("panic", true),
+					attribute.String("stackTrace", string(debug.Stack())))
+				log.EndSpan()
+				m.Close()
+				os.Exit(cli.ExitCodeErr)
+			} else {
+				log.Close()
+				m.Close()
+			}
+		}()
+
+		if err := cmd.ExecuteContext(ctx); err != nil {
+			return cli.ExitCodeErr
+		}
+		return cli.ExitCodeSuccess
 	}
+	os.Exit(run())
 }
 
-func buildRootCommand(in io.Reader) *cobra.Command {
-	mixin := kubernetes.New()
-	mixin.In = in
+func buildRootCommand(m *kubernetes.Mixin, in io.Reader) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:  "kubernetes",
-		Long: "kubernetes is a porter 👩🏽‍✈️ mixin that you can you can use to apply kubernetes manifests in your bundle",
+		Long: "kubernetes is a porter mixin that you can you can use to apply kubernetes manifests in your bundle",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			mixin.Out = cmd.OutOrStdout()
-			mixin.Err = cmd.OutOrStderr()
+			// Enable swapping out stdout/stderr/stdin for testing
+			m.In = in
+			m.Out = cmd.OutOrStdout()
+			m.Err = cmd.OutOrStderr()
 		},
 		SilenceUsage: true,
 	}
 
-	cmd.PersistentFlags().BoolVar(&mixin.Debug, "debug", false, "Enable debug logging")
-	cmd.AddCommand(buildVersionCommand(mixin))
-	cmd.AddCommand(buildBuildCommand(mixin))
-	cmd.AddCommand(buildInstallCommand(mixin))
-	cmd.AddCommand(buildInvokeCommand(mixin))
-	cmd.AddCommand(buildUpgradeCommand(mixin))
-	cmd.AddCommand(buildUninstallCommand(mixin))
-	cmd.AddCommand(buildSchemaCommand(mixin))
+	cmd.PersistentFlags().BoolVar(&m.DebugMode, "debug", false, "Enable debug logging")
+
+	cmd.AddCommand(buildVersionCommand(m))
+	cmd.AddCommand(buildBuildCommand(m))
+	cmd.AddCommand(buildInstallCommand(m))
+	cmd.AddCommand(buildInvokeCommand(m))
+	cmd.AddCommand(buildUpgradeCommand(m))
+	cmd.AddCommand(buildUninstallCommand(m))
+	cmd.AddCommand(buildSchemaCommand(m))
 	return cmd
 }
