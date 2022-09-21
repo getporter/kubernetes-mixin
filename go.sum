@@ -45,8 +45,8 @@ contrib.go.opencensus.io/exporter/stackdriver v0.13.4/go.mod h1:aXENhDJ1Y4lIg4EU
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
 get.porter.sh/magefiles v0.3.2 h1:RDJini5LBQ8pYnc0r8M6cX2Pk+CPsCtyFwO3fy8Jb5g=
 get.porter.sh/magefiles v0.3.2/go.mod h1:w8ikniAFHO7AVvWayyWF7ViHoh4tNKwTxtKpO1FyGkU=
-get.porter.sh/porter v1.0.0-rc.1.0.20220915161609-a787eef76259 h1:UqJe1gIQe8kEkjU1byq88MDKEpnQos8770NlDXaCxII=
-get.porter.sh/porter v1.0.0-rc.1.0.20220915161609-a787eef76259/go.mod h1:ZDh+OB2lJJL5aA7zBLhWRE9m9DhRxH0iVW88OoifL0c=
+get.porter.sh/porter v1.0.0-rc.2 h1:xclJNxXqlGaozFnSb82JM+B5I7cnJHY3q/W7w+FDONE=
+get.porter.sh/porter v1.0.0-rc.2/go.mod h1:EGPOxhMu44dRnwKdcedUtbMaFBrFrYzG1ybnHVYTrDs=
 github.com/Antonboom/errname v0.1.5/go.mod h1:DugbBstvPFQbv/5uLcRRzfrNqKE9tVdVCqWCLp6Cifo=
 github.com/Antonboom/nilnil v0.1.0/go.mod h1:PhHLvRPSghY5Y7mX4TW+BHZQYo1A8flE5H20D3IPZBo=
 github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 h1:UQHMgLO+TxOElx5B5HZ4hJQsoJ/PvUvKRhJHDQXO8P8=

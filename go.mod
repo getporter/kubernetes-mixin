@@ -11,7 +11,7 @@ replace github.com/spf13/viper => github.com/getporter/viper v1.7.1-porter.2.0.2
 
 require (
 	get.porter.sh/magefiles v0.3.2
-	get.porter.sh/porter v1.0.0-rc.1.0.20220915161609-a787eef76259
+	get.porter.sh/porter v1.0.0-rc.2
 	github.com/Masterminds/semver v1.5.0
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/ghodss/yaml v1.0.0
