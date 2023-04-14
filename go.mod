@@ -10,7 +10,7 @@ go 1.19
 replace github.com/spf13/viper => github.com/getporter/viper v1.7.1-porter.2.0.20210514172839-3ea827168363
 
 require (
-	get.porter.sh/magefiles v0.5.0
+	get.porter.sh/magefiles v0.5.1
 	get.porter.sh/porter v1.0.9
 	github.com/Masterminds/semver v1.5.0
 	github.com/PaesslerAG/jsonpath v0.1.1
