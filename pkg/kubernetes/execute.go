@@ -52,11 +52,12 @@ type ExecuteInstruction struct {
 	InstallArguments `yaml:",inline"`
 
 	// Upgrade specific arguments
-	Force       *bool `yaml:"force,omitempty"`
-	GracePeriod *int  `yaml:"gracePeriod,omitempty"`
-	Overwrite   *bool `yaml:"overwrite,omitempty"`
-	Prune       *bool `yaml:"prune,omitempty"`
-	Timeout     *int  `yaml:"timeout,omitempty"`
+	Force          *bool `yaml:"force,omitempty"`
+	GracePeriod    *int  `yaml:"gracePeriod,omitempty"`
+	Overwrite      *bool `yaml:"overwrite,omitempty"`
+	Prune          *bool `yaml:"prune,omitempty"`
+	Timeout        *int  `yaml:"timeout,omitempty"`
+	ForceConflicts *bool `yaml:"forceConflicts,omitempty"`
 }
 
 // Execute will reapply manifests using kubectl
@@ -164,6 +165,25 @@ func (m *Mixin) buildExecuteCommand(args ExecuteInstruction, manifestPath string
 	if args.Timeout != nil {
 		timeout := *args.Timeout
 		command = append(command, fmt.Sprintf("--timeout=%ds", timeout))
+	}
+
+	if args.ForceConflicts != nil {
+		forceConflicts := *args.ForceConflicts
+		fmt.Fprintf(m.Err, "ForceConflicts: %t\n", forceConflicts)
+		if forceConflicts {
+			if args.InstallArguments.ServerSide == nil {
+				return nil, fmt.Errorf(
+					"serverSide must be specified as true when force is specified.\n\t* serverSide not specified")
+			} else {
+				serverSide := *args.InstallArguments.ServerSide
+				fmt.Fprintf(m.Err, "ServerSide: %t\n", serverSide)
+				if serverSide != true {
+					return nil, fmt.Errorf("serverSide must be true when force is specified: %t", serverSide)
+				}
+			}
+
+			command = append(command, fmt.Sprintf("----force-conflicts=true"))
+		}
 	}
 
 	return command, nil

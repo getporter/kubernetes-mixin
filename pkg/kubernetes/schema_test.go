@@ -68,9 +68,12 @@ func TestMixin_ValidatePayload(t *testing.T) {
 	}{
 		{"install", "testdata/install-input.yaml", true, ""},
 		{"install-with-kubeconfig", "testdata/install-input-with-kubeconfig.yaml", true, ""},
+		{"install-input-serverside", "testdata/install-input-serverside.yaml", true, ""},
 		{"upgrade", "testdata/upgrade-input.yaml", true, ""},
+		{"upgrade-force-conflicts", "testdata/upgrade-input-force-conflicts.yaml", true, ""},
 		{"invoke", "testdata/invoke-input.yaml", true, ""},
 		{"uninstall", "testdata/uninstall-input.yaml", true, ""},
+		{"uninstall-cascade", "testdata/uninstall-input-cascade.yaml", true, ""},
 		{"install-bad-wait-flag", "testdata/install-input-bad-wait-flag.yaml", false, "install.0.kubernetes.wait: Invalid type. Expected: boolean, given: string"},
 		{"install-no-manifests", "testdata/install-input-no-manifests.yaml", false, "install.0.kubernetes: manifests is required"},
 		{"install-bad-outputs", "testdata/install-input-bad-outputs.yaml", false, "install.0.kubernetes.outputs.0: resourceType is required\n\t* install.0.kubernetes.outputs.0: resourceName is required\n\t* install.0.kubernetes.outputs.0: jsonPath is required"},

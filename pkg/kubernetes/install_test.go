@@ -31,6 +31,7 @@ func TestMixin_InstallStep(t *testing.T) {
 	dontWait := false
 	recordIt := true
 	validateIt := false
+	serverSide := true
 
 	namespace := "meditations"
 
@@ -38,6 +39,19 @@ func TestMixin_InstallStep(t *testing.T) {
 	k8scontext := "context"
 	kubeConfig := "$HOME/.kube/config"
 	installTests := []InstallTest{
+		{
+			expectedCommand: fmt.Sprintf("%s %s --wait --server-side=true", installCmd, manifestDirectory),
+			installStep: InstallStep{
+
+				InstallArguments: InstallArguments{
+					Step: Step{
+						Description: "Hello",
+					},
+					Manifests:  []string{manifestDirectory},
+					ServerSide: &serverSide,
+				},
+			},
+		},
 		{
 			expectedCommand: fmt.Sprintf("%s %s --wait", installCmd, manifestDirectory),
 			installStep: InstallStep{

@@ -30,6 +30,7 @@ type InstallArguments struct {
 	KubeConfig string   `yaml:"kubeConfig,omitempty"`
 	Validate   *bool    `yaml:"validate,omitempty"`
 	Wait       *bool    `yaml:"wait,omitempty"`
+	ServerSide *bool    `yaml:"serverSide,omitempty"`
 }
 
 func (m *Mixin) Install(ctx context.Context) error {
@@ -131,6 +132,13 @@ func (m *Mixin) buildInstallCommand(step InstallArguments, manifestPath string) 
 	}
 	if waitForIt {
 		command = append(command, "--wait")
+	}
+
+	if step.ServerSide != nil {
+		serverSide := *step.ServerSide
+		if serverSide {
+			command = append(command, "--server-side=true")
+		}
 	}
 
 	return command, nil
