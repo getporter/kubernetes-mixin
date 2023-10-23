@@ -169,7 +169,7 @@ func (m *Mixin) buildExecuteCommand(args ExecuteInstruction, manifestPath string
 
 	if args.ForceConflicts != nil {
 		forceConflicts := *args.ForceConflicts
-		fmt.Fprintf(m.Err, "ForceConflicts: %t\n", forceConflicts)
+		fmt.Fprintf(m.Out, "ForceConflicts: %t\n", forceConflicts)
 		if forceConflicts {
 			if args.InstallArguments.ServerSide == nil {
 				return nil, fmt.Errorf(
