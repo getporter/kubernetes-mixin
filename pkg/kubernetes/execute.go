@@ -176,7 +176,7 @@ func (m *Mixin) buildExecuteCommand(args ExecuteInstruction, manifestPath string
 					"serverSide must be specified as true when force is specified.\n\t* serverSide not specified")
 			} else {
 				serverSide := *args.InstallArguments.ServerSide
-				fmt.Fprintf(m.Err, "ServerSide: %t\n", serverSide)
+				fmt.Fprintf(m.Out, "ServerSide: %t\n", serverSide)
 				if !serverSide {
 					return nil, fmt.Errorf("serverSide must be true when force is specified: %t", serverSide)
 				}
