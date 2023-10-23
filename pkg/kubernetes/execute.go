@@ -182,7 +182,7 @@ func (m *Mixin) buildExecuteCommand(args ExecuteInstruction, manifestPath string
 				}
 			}
 
-			command = append(command, fmt.Sprintf("--force-conflicts=true"))
+			command = append(command, "--force-conflicts=true")
 		}
 	}
 
