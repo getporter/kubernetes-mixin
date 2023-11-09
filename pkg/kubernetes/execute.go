@@ -168,20 +168,20 @@ func (m *Mixin) buildExecuteCommand(args ExecuteInstruction, manifestPath string
 
 	if args.ForceConflicts != nil {
 		forceConflicts := *args.ForceConflicts
-		fmt.Fprintf(m.Err, "ForceConflicts: %t\n", forceConflicts)
+		fmt.Fprintf(m.Out, "ForceConflicts: %t\n", forceConflicts)
 		if forceConflicts {
 			if args.InstallArguments.ServerSide == nil {
 				return nil, fmt.Errorf(
 					"serverSide must be specified as true when force is specified.\n\t* serverSide not specified")
 			} else {
 				serverSide := *args.InstallArguments.ServerSide
-				fmt.Fprintf(m.Err, "ServerSide: %t\n", serverSide)
-				if serverSide != true {
+				fmt.Fprintf(m.Out, "ServerSide: %t\n", serverSide)
+				if !serverSide {
 					return nil, fmt.Errorf("serverSide must be true when force is specified: %t", serverSide)
 				}
 			}
 
-			command = append(command, fmt.Sprintf("--force-conflicts=true"))
+			command = append(command, "--force-conflicts=true")
 		}
 	}
 
