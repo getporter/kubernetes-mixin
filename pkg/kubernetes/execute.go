@@ -52,12 +52,11 @@ type ExecuteInstruction struct {
 	InstallArguments `yaml:",inline"`
 
 	// Upgrade specific arguments
-	Force          *bool `yaml:"force,omitempty"`
-	GracePeriod    *int  `yaml:"gracePeriod,omitempty"`
-	Overwrite      *bool `yaml:"overwrite,omitempty"`
-	Prune          *bool `yaml:"prune,omitempty"`
-	Timeout        *int  `yaml:"timeout,omitempty"`
-	ForceConflicts *bool `yaml:"forceConflicts,omitempty"`
+	Force       *bool `yaml:"force,omitempty"`
+	GracePeriod *int  `yaml:"gracePeriod,omitempty"`
+	Overwrite   *bool `yaml:"overwrite,omitempty"`
+	Prune       *bool `yaml:"prune,omitempty"`
+	Timeout     *int  `yaml:"timeout,omitempty"`
 }
 
 // Execute will reapply manifests using kubectl

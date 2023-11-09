@@ -76,6 +76,10 @@
             "serverSide": {
               "type": ["boolean","null"],
               "default":"false"
+            },
+            "forceConflicts": {
+              "type": ["boolean","null"],
+              "default":"false"
             }
           },
           "additionalProperties": false,
@@ -231,7 +235,7 @@
             },
             "forceConflicts": {
               "type": ["boolean","null"],
-              "default":"true"
+              "default":"false"
             },
             "serverSide": {
               "type": ["boolean","null"],

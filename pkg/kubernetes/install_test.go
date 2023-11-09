@@ -32,6 +32,7 @@ func TestMixin_InstallStep(t *testing.T) {
 	recordIt := true
 	validateIt := false
 	serverSide := true
+	forceConflicts := true
 
 	namespace := "meditations"
 
@@ -49,6 +50,33 @@ func TestMixin_InstallStep(t *testing.T) {
 					},
 					Manifests:  []string{manifestDirectory},
 					ServerSide: &serverSide,
+				},
+			},
+		},
+		{
+			expectedCommand: fmt.Sprintf("%s %s --wait --server-side=true --force-conflicts=true", installCmd, manifestDirectory),
+			installStep: InstallStep{
+
+				InstallArguments: InstallArguments{
+					Step: Step{
+						Description: "Hello",
+					},
+					Manifests:      []string{manifestDirectory},
+					ServerSide:     &serverSide,
+					ForceConflicts: &forceConflicts,
+				},
+			},
+		},
+		{
+			expectedCommand: fmt.Sprintf("%s %s --wait --force-conflicts=true", installCmd, manifestDirectory),
+			installStep: InstallStep{
+
+				InstallArguments: InstallArguments{
+					Step: Step{
+						Description: "Hello",
+					},
+					Manifests:      []string{manifestDirectory},
+					ForceConflicts: &forceConflicts,
 				},
 			},
 		},
