@@ -32,6 +32,7 @@ type UninstallArguments struct {
 	KubeConfig  string `yaml:"kubeConfig,omitempty"`
 	Timeout     *int   `yaml:"timeout,omitempty"`
 	Wait        *bool  `yaml:"wait,omitempty"`
+	Cascade     string `yaml:"cascade,omitempty"`
 }
 
 // Uninstall will delete anything created during the install or upgrade step
@@ -138,6 +139,10 @@ func (m *Mixin) buildUninstallCommand(args UninstallArguments, manifestPath stri
 	}
 	if waitForIt {
 		command = append(command, "--wait")
+	}
+
+	if args.Cascade != "" {
+		command = append(command, fmt.Sprintf("--cascade=%s", args.Cascade))
 	}
 
 	return command, nil

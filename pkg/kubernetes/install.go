@@ -22,14 +22,16 @@ type InstallStep struct {
 type InstallArguments struct {
 	Step `yaml:",inline"`
 
-	Namespace  string   `yaml:"namespace"`
-	Manifests  []string `yaml:"manifests,omitempty"`
-	Record     *bool    `yaml:"record,omitempty"`
-	Selector   string   `yaml:"selector,omitempty"`
-	Context    string   `yaml:"context,omitempty"`
-	KubeConfig string   `yaml:"kubeConfig,omitempty"`
-	Validate   *bool    `yaml:"validate,omitempty"`
-	Wait       *bool    `yaml:"wait,omitempty"`
+	Namespace      string   `yaml:"namespace"`
+	Manifests      []string `yaml:"manifests,omitempty"`
+	Record         *bool    `yaml:"record,omitempty"`
+	Selector       string   `yaml:"selector,omitempty"`
+	Context        string   `yaml:"context,omitempty"`
+	KubeConfig     string   `yaml:"kubeConfig,omitempty"`
+	Validate       *bool    `yaml:"validate,omitempty"`
+	Wait           *bool    `yaml:"wait,omitempty"`
+	ServerSide     *bool    `yaml:"serverSide,omitempty"`
+	ForceConflicts *bool    `yaml:"forceConflicts,omitempty"`
 }
 
 func (m *Mixin) Install(ctx context.Context) error {
@@ -131,6 +133,28 @@ func (m *Mixin) buildInstallCommand(step InstallArguments, manifestPath string) 
 	}
 	if waitForIt {
 		command = append(command, "--wait")
+	}
+
+	if step.ServerSide != nil {
+		serverSide := *step.ServerSide
+		if serverSide {
+			command = append(command, "--server-side=true")
+		}
+	}
+
+	// Only add forceConflicts if ServerSide is true.
+	// From the kubectl doc `If forceConflicts=true, server-side apply will force the changes against conflicts.`
+	// Hence, it is only relevant if ServerSide is true
+	if step.ForceConflicts != nil {
+		forceConflicts := *step.ForceConflicts
+		if forceConflicts {
+			if step.ServerSide != nil {
+				serverSide := *step.ServerSide
+				if serverSide {
+					command = append(command, "--force-conflicts=true")
+				}
+			}
+		}
 	}
 
 	return command, nil

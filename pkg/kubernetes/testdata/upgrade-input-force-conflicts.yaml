@@ -1,0 +1,8 @@
+upgrade:
+  - kubernetes:
+      description: "Upgrade Hello World App - Serverside + ForceConflicts"
+      manifests:
+        - /cnab/app/manifests/hello
+      wait: true
+      serverSide: true
+      forceConflicts: true
