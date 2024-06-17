@@ -1,0 +1,7 @@
+uninstall:
+  - kubernetes:
+      description: "Uninstall Hello World App"
+      manifests:
+        - /cnab/app/manifests/hello
+      wait: true
+      cascade: "background"

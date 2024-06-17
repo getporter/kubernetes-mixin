@@ -1,0 +1,6 @@
+install:
+  - kubernetes:
+      description: "Install Hello World App - ServerSide Apply"
+      manifests:
+        - /cnab/app/manifests/hello
+      forceConflicts: true

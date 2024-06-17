@@ -27,6 +27,7 @@ func TestMixin_ExecuteStep(t *testing.T) {
 
 	recordIt := true
 	validateIt := false
+	serverSide := true
 
 	namespace := "meditations"
 
@@ -45,6 +46,20 @@ func TestMixin_ExecuteStep(t *testing.T) {
 	upgradeTests := []ExecuteTest{
 		// These tests are largely the same as the install, just testing that the embedded
 		// install gets handled correctly
+		{
+			expectedCommand: fmt.Sprintf("%s %s --wait --server-side=true", upgradeCmd, manifestDirectory),
+			executeStep: ExecuteStep{
+				ExecuteInstruction: ExecuteInstruction{
+					InstallArguments: InstallArguments{
+						Step: Step{
+							Description: "Hello",
+						},
+						Manifests:  []string{manifestDirectory},
+						ServerSide: &serverSide,
+					},
+				},
+			},
+		},
 		{
 			expectedCommand: fmt.Sprintf("%s %s --wait", upgradeCmd, manifestDirectory),
 			executeStep: ExecuteStep{

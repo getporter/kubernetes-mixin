@@ -145,6 +145,18 @@ func TestMixin_UninstallStep(t *testing.T) {
 				},
 			},
 		},
+		{
+			expectedCommand: fmt.Sprintf("%s %s --wait --cascade=background", deleteCmd, manifestDirectory),
+			uninstallStep: UninstallStep{
+				UninstallArguments: UninstallArguments{
+					Step: Step{
+						Description: "Hello",
+					},
+					Manifests: []string{manifestDirectory},
+					Cascade:   "background",
+				},
+			},
+		},
 	}
 
 	defer os.Unsetenv(test.ExpectedCommandEnv)
