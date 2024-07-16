@@ -72,6 +72,14 @@
             },
             "outputs": {
               "$ref": "#/definitions/outputs"
+            },
+            "serverSide": {
+              "type": ["boolean","null"],
+              "default":"false"
+            },
+            "forceConflicts": {
+              "type": ["boolean","null"],
+              "default":"false"
             }
           },
           "additionalProperties": false,
@@ -144,6 +152,14 @@
             },
             "outputs": {
               "$ref": "#/definitions/outputs"
+            },
+            "serverSide": {
+              "type": ["boolean","null"],
+              "default":"false"
+            },
+            "forceConflicts": {
+              "type": ["boolean","null"],
+              "default":"false"
             }
           },
           "additionalProperties": false,
@@ -216,6 +232,18 @@
             },
             "outputs": {
               "$ref": "#/definitions/outputs"
+            },
+            "forceConflicts": {
+              "type": ["boolean","null"],
+              "default":"false"
+            },
+            "serverSide": {
+              "type": ["boolean","null"],
+              "default":"false"
+            },
+            "cascade": {
+              "type": "string",
+              "default":"background"
             }
           },
           "additionalProperties": false,
@@ -270,6 +298,10 @@
             "wait": {
               "type": "boolean",
               "default":"true"
+            },
+            "cascade": {
+              "type": "string",
+              "default":"background"
             }
           },
           "additionalProperties": false,

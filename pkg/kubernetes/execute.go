@@ -166,5 +166,24 @@ func (m *Mixin) buildExecuteCommand(args ExecuteInstruction, manifestPath string
 		command = append(command, fmt.Sprintf("--timeout=%ds", timeout))
 	}
 
+	if args.ForceConflicts != nil {
+		forceConflicts := *args.ForceConflicts
+		fmt.Fprintf(m.Out, "ForceConflicts: %t\n", forceConflicts)
+		if forceConflicts {
+			if args.InstallArguments.ServerSide == nil {
+				return nil, fmt.Errorf(
+					"serverSide must be specified as true when force is specified.\n\t* serverSide not specified")
+			} else {
+				serverSide := *args.InstallArguments.ServerSide
+				fmt.Fprintf(m.Out, "ServerSide: %t\n", serverSide)
+				if !serverSide {
+					return nil, fmt.Errorf("serverSide must be true when force is specified: %t", serverSide)
+				}
+			}
+
+			command = append(command, "--force-conflicts=true")
+		}
+	}
+
 	return command, nil
 }
