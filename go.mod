@@ -1,6 +1,6 @@
 module get.porter.sh/mixin/kubernetes
 
-go 1.20
+go 1.23
 
 // These are replace directives copied from porter
 // When you use a newer version of Porter, if you run into trouble with go mod tidy
