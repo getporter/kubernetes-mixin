@@ -2,8 +2,6 @@ module get.porter.sh/mixin/kubernetes
 
 go 1.23
 
-toolchain go1.23.3
-
 // These are replace directives copied from porter
 // When you use a newer version of Porter, if you run into trouble with go mod tidy
 // Copy any additional replace directives from Porter's go.mod file
@@ -18,7 +16,7 @@ require (
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/ghodss/yaml v1.0.0
 	github.com/pkg/errors v0.9.1
-	github.com/spf13/cobra v1.9.0
+	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	github.com/xeipuuv/gojsonschema v1.2.0
 	go.opentelemetry.io/otel v1.35.0
